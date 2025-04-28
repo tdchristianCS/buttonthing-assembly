@@ -1,0 +1,26 @@
+body {
+  background-color: rgb(112,0,79);
+}
+#canvas-layer-1 {
+  background-color: rgb(256, 220, 256);
+  padding: 0;
+  margin: auto;
+  display: block;
+  outline: black 3px solid;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+#canvas-layer-2 {
+  padding: 0;
+  margin: auto;
+  display: block;
+  outline: black 3px solid;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
