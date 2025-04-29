@@ -14,12 +14,22 @@ var laneOneClickNumber = 1;
 var laneTwoClickNumber = 1;
 var laneThreeClickNumber = 1;
 var laneFourClickNumber = 1;
-var breakLoop = false;
+var breakLoop1 = false;
+var breakLoop2 = false;
+var breakLoop3 = false;
+var breakLoop4 = false;
+
+let frames_per_second = 30;
+let previousTime = performance.now();
+let frameInterval = 1000/frames_per_second;
+let deltaTimeMultiplier = 1;
+let deltaTime = 0;
 
 Tone.Transport.bpm.value = bpm * 4;
 
 var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
 
+//I coded this part in 5 minutes and now I have no idea what this does
 function generateNote() {
   row = Math.floor((beatMap[beatIndex] - (beatMap[beatIndex] % 10)) / 10);
   while (row == beat) {
@@ -53,6 +63,7 @@ function draw() {
 }
 
 class Note {
+  //create notes, each lane is independent from each other
   constructor(noteNumber, lane) {
     if (lane == 1) {
       this.x = 5;
@@ -74,14 +85,17 @@ class Note {
     this.lane = lane;
   }
   draw() {
+    //called in update, draws note according to new y value when called
     if (this.visible == true) {
       ctx2.fillStyle = "rgb(150, 0, 150)";
       ctx2.fillRect(this.x, this.y, this.width, this.height);
     }
   }
-  update() {
+  update(deltaTimeMultiplier) {
+    //increases y value and calls draw function
     ctx2.clearRect(this.x, this.y, this.width, this.height);
-    this.y += 10;
+    this.y += 10 * deltaTimeMultiplier;
+    //clears note if it falls off screen
     if (this.y >= 650 && this.visible == true) {
       if (this.lane == 1) {
         this.laneOneClear(this.laneOneBeatNumber);
@@ -98,44 +112,37 @@ class Note {
     }
     this.draw();
   }
-  laneOneClear(clickNumber) {
-    if (this.laneOneBeatNumber == clickNumber) {
-      this.visible = false;
-      ctx2.clearRect(this.x, this.y, this.width, this.height);
-      laneOneClickNumber++;
-      breakLoop = true;
-    }
+  laneOneClear() {
+    this.visible = false;
+    ctx2.clearRect(this.x, this.y, this.width, this.height);
+    laneOneClickNumber++;
   }
-  laneTwoClear(clickNumber) {
-    if (this.laneTwoBeatNumber == clickNumber) {
+  laneTwoClear() {
       this.visible = false;
       ctx2.clearRect(this.x, this.y, this.width, this.height);
       laneTwoClickNumber++;
-    }
   }
-  laneThreeClear(clickNumber) {
-    if (this.laneThreeBeatNumber == clickNumber) {
+  laneThreeClear() {
       this.visible = false;
       ctx2.clearRect(this.x, this.y, this.width, this.height);
       laneThreeClickNumber++;
-    }
   }
   laneFourClear(clickNumber) {
-    if (this.laneFourBeatNumber == clickNumber) {
       this.visible = false;
       ctx2.clearRect(this.x, this.y, this.width, this.height);
       laneFourClickNumber++;
-      
-    }
   }
 }
 
 function updateNote() {
-  notes.forEach((Note) => Note.update());
+  notes.forEach((Note) => Note.update(deltaTimeMultiplier));
 }
 
-function animate() {
+function animate(currentTime) {
+  deltaTime = currentTime - previousTime;
+  deltaTimeMultiplier = 1;
   updateNote();
+  previousTime = currentTime;
   requestAnimationFrame(animate);
 }
 
@@ -179,7 +186,7 @@ function drawK() {
 window.onload = (event) => {
   draw();
   animate();
-};
+}
 
 window.addEventListener("keydown", checkButtonClick, false);
 
@@ -187,26 +194,43 @@ function checkButtonClick(e) {
   if (e.code == "KeyD") {
     drawClickD();
     for (let item of notes) {
-      item.laneOneClear(laneOneClickNumber);
-      if (breakLoop = true) {
-        console.log("break")
-        break;
+      if (item.laneOneBeatNumber == laneOneClickNumber && !breakLoop1 && item.y>300) {
+        item.laneOneClear(laneOneClickNumber);
+        breakLoop1 = true;
       }
     }
-    breakLoop = false;
   }
+  breakLoop1 = false;
   if (e.code == "KeyF") {
     drawClickF();
-    notes.forEach((Note) => Note.laneTwoClear(laneTwoClickNumber));
+    for (let item of notes) {
+      if (item.laneTwoBeatNumber == laneTwoClickNumber && !breakLoop2 && item.y>300) {
+        item.laneTwoClear(laneTwoClickNumber);
+        breakLoop2 = true;
+      }
+    }
   }
+  breakLoop2 = false;
   if (e.code == "KeyJ") {
     drawClickJ();
-    notes.forEach((Note) => Note.laneThreeClear(laneThreeClickNumber));
+    for (let item of notes) {
+      if (item.laneThreeBeatNumber == laneThreeClickNumber && !breakLoop3 && item.y>300) {
+        item.laneThreeClear(laneThreeClickNumber);
+        breakLoop3 = true;
+      }
+    }
   }
+  breakLoop3 = false;
   if (e.code == "KeyK") {
     drawClickK();
-    notes.forEach((Note) => Note.laneFourClear(laneFourClickNumber));
+    for (let item of notes) {
+      if (item.laneFourBeatNumber == laneFourClickNumber && !breakLoop4 && item.y>300) {
+        item.laneFourClear(laneFourClickNumber);
+        breakLoop4 = true;
+      }
+    }
   }
+  breakLoop4 = false;
   if (e.code == "Enter") {
     Tone.Transport.start();
   }
@@ -214,4 +238,3 @@ function checkButtonClick(e) {
     Tone.Transport.stop();
   }
 }
-
