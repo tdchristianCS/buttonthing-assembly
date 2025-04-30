@@ -18,6 +18,7 @@ var breakLoop1 = false;
 var breakLoop2 = false;
 var breakLoop3 = false;
 var breakLoop4 = false;
+const noteOffset = 850;
 
 let frames_per_second = 30;
 let previousTime = performance.now();
@@ -118,6 +119,10 @@ class Note {
     ctx2.clearRect(this.x, this.y, this.width, this.height);
     if (this.y < 485 + 30 && this.y > 485 - 30) {
           score += 10;
+        } else if (this.y < 485 + 60 && this.y > 485 - 60) {
+          score += 5
+        } else {
+          score -= 5
         }
     laneOneClickNumber++;
   }
@@ -126,6 +131,10 @@ class Note {
       ctx2.clearRect(this.x, this.y, this.width, this.height);
     if (this.y < 485 + 30 && this.y > 485 - 30) {
           score += 10;
+        } else if (this.y < 485 + 60 && this.y > 485 - 60) {
+          score += 5
+        } else {
+          score -= 5
         }
       laneTwoClickNumber++;
   }
@@ -134,6 +143,10 @@ class Note {
       ctx2.clearRect(this.x, this.y, this.width, this.height);
     if (this.y < 485 + 30 && this.y > 485 - 30) {
           score += 10;
+        } else if (this.y < 485 + 60 && this.y > 485 - 60) {
+          score += 5
+        } else {
+          score -= 5
         }
       laneThreeClickNumber++;
   }
@@ -142,6 +155,10 @@ class Note {
       ctx2.clearRect(this.x, this.y, this.width, this.height);
     if (this.y < 485 + 30 && this.y > 485 - 30) {
           score += 10;
+        } else if (this.y < 485 + 60 && this.y > 485 - 60) {
+          score += 5
+        } else {
+          score -= 5
         }
       laneFourClickNumber++;
   }
@@ -251,5 +268,5 @@ function checkButtonClick(e) {
   if (e.code == "Escape") {
     Tone.Transport.stop();
   }
-  document.getElementById('score-display').innerHTML = 'score = ' + score;
+  document.getElementById('score-display').innerHTML = 'Score = ' + score;
 }
