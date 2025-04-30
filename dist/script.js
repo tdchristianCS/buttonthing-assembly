@@ -26,7 +26,7 @@ let deltaTimeMultiplier = 1;
 let deltaTime = 0;
 
 Tone.Transport.bpm.value = bpm * 4;
-document.getElementById("display").innerHTML = 'Score = 0'
+document.getElementById("score-display").innerHTML = 'Score = 0'
 
 var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
 
@@ -251,5 +251,5 @@ function checkButtonClick(e) {
   if (e.code == "Escape") {
     Tone.Transport.stop();
   }
-  document.getElementById('display').innerHTML = 'score = ' + score;
+  document.getElementById('score-display').innerHTML = 'score = ' + score;
 }
