@@ -29,7 +29,7 @@ Tone.Transport.bpm.value = bpm * 4;
 
 var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
 
-//I coded this part in 5 minutes and now I have no idea what this does
+//I coded this part flawlessly in 5 minutes and now I have no idea what this does
 function generateNote() {
   row = Math.floor((beatMap[beatIndex] - (beatMap[beatIndex] % 10)) / 10);
   while (row == beat) {
@@ -93,8 +93,8 @@ class Note {
   }
   update(deltaTimeMultiplier) {
     //increases y value and calls draw function
-    ctx2.clearRect(this.x, this.y, this.width, this.height);
-    this.y += 10 * deltaTimeMultiplier;
+    ctx2.clearRect(this.x, this.y-10, this.width, this.height+20);
+    this.y += 20 * deltaTimeMultiplier;
     //clears note if it falls off screen
     if (this.y >= 650 && this.visible == true) {
       if (this.lane == 1) {
@@ -140,7 +140,7 @@ function updateNote() {
 
 function animate(currentTime) {
   deltaTime = currentTime - previousTime;
-  deltaTimeMultiplier = 1;
+  deltaTimeMultiplier = deltaTime/frameInterval;
   updateNote();
   previousTime = currentTime;
   requestAnimationFrame(animate);
