@@ -24,3 +24,7 @@ body {
   left: 0;
   right: 0;
 }
+
+#score-display {
+  font-size:70px;
+}
