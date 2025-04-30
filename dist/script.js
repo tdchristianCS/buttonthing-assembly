@@ -26,6 +26,7 @@ let deltaTimeMultiplier = 1;
 let deltaTime = 0;
 
 Tone.Transport.bpm.value = bpm * 4;
+document.getElementById("display").innerHTML = 'Score = 0'
 
 var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
 
@@ -98,16 +99,16 @@ class Note {
     //clears note if it falls off screen
     if (this.y >= 650 && this.visible == true) {
       if (this.lane == 1) {
-        this.laneOneClear(this.laneOneBeatNumber);
+        this.laneOneClear();
       }
       if (this.lane == 2) {
-        this.laneTwoClear(this.laneTwoBeatNumber);
+        this.laneTwoClear();
       }
       if (this.lane == 3) {
-        this.laneThreeClear(this.laneThreeBeatNumber);
+        this.laneThreeClear();
       }
       if (this.lane == 4) {
-        this.laneFourClear(this.laneFourBeatNumber);
+        this.laneFourClear();
       }
     }
     this.draw();
@@ -115,24 +116,37 @@ class Note {
   laneOneClear() {
     this.visible = false;
     ctx2.clearRect(this.x, this.y, this.width, this.height);
+    if (this.y < 485 + 30 && this.y > 485 - 30) {
+          score += 10;
+        }
     laneOneClickNumber++;
   }
   laneTwoClear() {
       this.visible = false;
       ctx2.clearRect(this.x, this.y, this.width, this.height);
+    if (this.y < 485 + 30 && this.y > 485 - 30) {
+          score += 10;
+        }
       laneTwoClickNumber++;
   }
   laneThreeClear() {
       this.visible = false;
       ctx2.clearRect(this.x, this.y, this.width, this.height);
+    if (this.y < 485 + 30 && this.y > 485 - 30) {
+          score += 10;
+        }
       laneThreeClickNumber++;
   }
   laneFourClear(clickNumber) {
       this.visible = false;
       ctx2.clearRect(this.x, this.y, this.width, this.height);
+    if (this.y < 485 + 30 && this.y > 485 - 30) {
+          score += 10;
+        }
       laneFourClickNumber++;
   }
 }
+
 
 function updateNote() {
   notes.forEach((Note) => Note.update(deltaTimeMultiplier));
@@ -237,4 +251,5 @@ function checkButtonClick(e) {
   if (e.code == "Escape") {
     Tone.Transport.stop();
   }
+  document.getElementById('display').innerHTML = 'score = ' + score;
 }
