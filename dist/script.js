@@ -30,6 +30,14 @@ Tone.Transport.bpm.value = bpm * 4;
 document.getElementById("score-display").innerHTML = 'Score = 0'
 
 var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
+var audioPlayer = new Audio('/dist/song.mp3');
+
+Tone.Transport.schedule((time) => {
+  console.log("This function ran at transport time:", time);
+  audioPlayer.play();
+}, "+0.6");
+
+
 
 //I coded this part flawlessly in 5 minutes and now I have no idea what this does
 function generateNote() {
