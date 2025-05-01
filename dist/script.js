@@ -104,7 +104,7 @@ class Note {
   update(deltaTimeMultiplier) {
     //increases y value and calls draw function
     ctx2.clearRect(this.x, this.y-10, this.width, this.height+20);
-    this.y += 20 * deltaTimeMultiplier;
+    this.y += 25 * deltaTimeMultiplier;
     //clears note if it falls off screen
     if (this.y >= 650 && this.visible == true) {
       if (this.lane == 1) {
