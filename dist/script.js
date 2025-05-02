@@ -125,48 +125,40 @@ class Note {
   laneOneClear() {
     this.visible = false;
     ctx2.clearRect(this.x, this.y, this.width, this.height);
-    if (this.y < 485 + 80 && this.y > 485 - 80) {
+    if (this.y < 485 + 75 && this.y > 485 - 75) {
           score += 10;
         } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-          score += 5
-        } else {
-          score -= 5
+          score += 1
         }
     laneOneClickNumber++;
   }
   laneTwoClear() {
       this.visible = false;
       ctx2.clearRect(this.x, this.y, this.width, this.height);
-    if (this.y < 485 + 80 && this.y > 485 - 80) {
+    if (this.y < 485 + 75 && this.y > 485 - 75) {
           score += 10;
         } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-          score += 5
-        } else {
-          score -= 5
+          score += 1
         }
       laneTwoClickNumber++;
   }
   laneThreeClear() {
       this.visible = false;
       ctx2.clearRect(this.x, this.y, this.width, this.height);
-    if (this.y < 485 + 80 && this.y > 485 - 80) {
+    if (this.y < 485 + 75 && this.y > 485 - 75) {
           score += 10;
         } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-          score += 5
-        } else {
-          score -= 5
+          score += 1
         }
       laneThreeClickNumber++;
   }
   laneFourClear(clickNumber) {
       this.visible = false;
       ctx2.clearRect(this.x, this.y, this.width, this.height);
-    if (this.y < 485 + 80 && this.y > 485 - 80) {
+    if (this.y < 485 + 75 && this.y > 485 - 75) {
           score += 10;
         } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-          score += 5
-        } else {
-          score -= 5
+          score += 1
         }
       laneFourClickNumber++;
   }
