@@ -22,11 +22,11 @@ const beatBase = 10;
 
 // NoteNumbers are unique IDs for each note, independent by column
 // e.g. 3 consecutive notes in column 1 will be numbered 1, 2, 3
-var laneNoteNumbers = [0, 0, 0, 0];
-var laneOneNoteNumber = 0;
-var laneTwoNoteNumber = 0;
-var laneThreeNoteNumber = 0;
-var laneFourNoteNumber = 0;
+var laneNoteNumbers = [1, 1, 1, 1];
+var laneOneNoteNumber = 1;
+var laneTwoNoteNumber = 1;
+var laneThreeNoteNumber = 1;
+var laneFourNoteNumber = 1;
 
 var laneClickNumbers = [1, 1, 1, 1];
 var laneOneClickNumber = 1;
@@ -56,6 +56,7 @@ var audioPlayer = new Audio('/dist/song.mp3');
 
 Tone.Transport.schedule((time) => {
   audioPlayer.play();
+  console.log("audio played")
 }, "+0.51");
 
 
@@ -71,9 +72,11 @@ function generateNote() {
     column = beatMap[beatIndex] % beatBase;
 
     // Create and push a new note in the appropriate column, incrementing the note count in that column
-    laneNoteNumbers[column - 1]++;
     notes.push(new Note(laneNoteNumbers[column - 1], column));
-
+    if (column == 1){
+      console.log(laneNoteNumbers[0], beat);
+    }
+    laneNoteNumbers[column - 1]++;
     beatIndex++;
     row = Math.floor((beatMap[beatIndex] - (beatMap[beatIndex] % beatBase)) / beatBase);
   }
@@ -97,9 +100,6 @@ class Note {
 
   //create notes, each lane is independent from each other
   constructor(noteNumber, lane) {
-    this.x = this.getX();
-    
-
     this.laneBeatNumbers = [0, 0, 0, 0];
     this.laneBeatNumbers[lane - 1] = noteNumber;
 
@@ -108,6 +108,8 @@ class Note {
     this.height = 30;
     this.visible = true;
     this.lane = lane;
+    this.x = this.getX();
+
   }
 
   getX() {
@@ -119,7 +121,6 @@ class Note {
   */
   draw() {
     if (!this.visible) { return; }
-
     ctx2.fillStyle = "rgb(150, 0, 150)";
     ctx2.fillRect(this.x, this.y, this.width, this.height);
   }
@@ -136,11 +137,11 @@ class Note {
   }
   clearLane() {
     this.visible = false;
-    ctx2.clearRect(this.getX(), this.y, this.width, this.height);
+    ctx2.clearRect(this.x, this.y, this.width, this.height);
     if (this.y < 485 + 75 && this.y > 485 - 75) {
       score += 10;
     } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-      score += 1
+      score += 1;
     }
     laneClickNumbers[this.lane - 1]++;
 
@@ -223,16 +224,15 @@ function checkButtonClick(e) {
     "KeyJ": [3, drawClickJ],
     "KeyK": [4, drawClickK],
   };
+  
 
-  if (e.code in Object.keys(noteToLanes)) {
+  if (Object.keys(noteToLanes).includes(e.code)) {
     let dataSet = noteToLanes[e.code];
     let lane = dataSet[0];
-    let drawClick = dataSet[1];
-  
+    let drawClick = dataSet[1];  
     let breakLoop = false;
-  
+    drawClick();
     for (let note of notes) {
-      drawClick();
       if ((note.laneBeatNumbers[lane - 1] === laneClickNumbers[lane - 1]) && !breakLoop && (note.y > 300)) {
         note.clearLane();
         breakLoop = true;
