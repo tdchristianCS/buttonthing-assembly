@@ -1,31 +1,53 @@
+// Collection of the notes that fall
 const notes = [];
+
+// Canvas for graphics (similar to a window in Pygame)
 const canvas1 = $("#canvas-layer-1");
 const canvas2 = $("#canvas-layer-2");
+
+// Each canvas has a "drawing context" (similar to a Surface in pygame)
 const ctx1 = canvas1[0].getContext("2d");
 const ctx2 = canvas2[0].getContext("2d");
+
+// graphical constants
+const noteOffsetX = 5;
+const noteWidth = 270;
+
+// App variables. We use var to make them global.
+// If they were const, they'd be global but couldn't change
 var score = 0;
 var beatIndex = 0;
 var beat = 1;
-var laneOneNoteNumber = 1;
-var laneTwoNoteNumber = 1;
-var laneThreeNoteNumber = 1;
-var laneFourNoteNumber = 1;
+const beatBase = 10;
+
+// NoteNumbers are unique IDs for each note, independent by column
+// e.g. 3 consecutive notes in column 1 will be numbered 1, 2, 3
+var laneNoteNumbers = [0, 0, 0, 0];
+var laneOneNoteNumber = 0;
+var laneTwoNoteNumber = 0;
+var laneThreeNoteNumber = 0;
+var laneFourNoteNumber = 0;
+
+var laneClickNumbers = [1, 1, 1, 1];
 var laneOneClickNumber = 1;
 var laneTwoClickNumber = 1;
 var laneThreeClickNumber = 1;
 var laneFourClickNumber = 1;
+
+// hack to short-circuit the conditions in the for-loops below
 var breakLoop1 = false;
 var breakLoop2 = false;
 var breakLoop3 = false;
 var breakLoop4 = false;
-const noteOffset = 850;
 
+// Timing/speed/FPS values
 let frames_per_second = 30;
 let previousTime = performance.now();
-let frameInterval = 1000/frames_per_second;
-let deltaTimeMultiplier = 1;
+let frameInterval = 1000 / frames_per_second;
+var deltaTimeOffset = 1;
 let deltaTime = 0;
 
+// Tone...
 Tone.Transport.bpm.value = bpm * 4;
 document.getElementById("score-display").innerHTML = 'Score = 0'
 
@@ -33,146 +55,106 @@ var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
 var audioPlayer = new Audio('/dist/song.mp3');
 
 Tone.Transport.schedule((time) => {
-  console.log("This function ran at transport time:", time);
   audioPlayer.play();
 }, "+0.51");
 
 
-
-//I coded this part flawlessly in 5 minutes and now I have no idea what this does
+// I coded this part flawlessly in 5 minutes and now I have no idea what this does
 function generateNote() {
-  row = Math.floor((beatMap[beatIndex] - (beatMap[beatIndex] % 10)) / 10);
+
+  // All columns of order > 1 are the row (beat) #
+  row = Math.floor((beatMap[beatIndex] - (beatMap[beatIndex] % beatBase)) / beatBase);
   while (row == beat) {
-    column = beatMap[beatIndex] % 10;
-    if (column == 1) {
-      notes.push(new Note(laneOneNoteNumber, 1));
-      laneOneNoteNumber++;
-    } else if (column == 2) {
-      notes.push(new Note(laneTwoNoteNumber, 2));
-      laneTwoNoteNumber++;
-    } else if (column == 3) {
-      notes.push(new Note(laneThreeNoteNumber, 3));
-      laneThreeNoteNumber++;
-    } else if (column == 4) {
-      notes.push(new Note(laneFourNoteNumber, 4));
-      laneFourNoteNumber++;
-    }
+
+    // Get the ones column of the beat; this is equivalent to the lane
+    // Always 1, 2, 3, 4
+    column = beatMap[beatIndex] % beatBase;
+
+    // Create and push a new note in the appropriate column, incrementing the note count in that column
+    laneNoteNumbers[column - 1]++;
+    notes.push(new Note(laneNoteNumbers[column - 1], column));
+
     beatIndex++;
-    row = Math.floor((beatMap[beatIndex] - (beatMap[beatIndex] % 10)) / 10);
+    row = Math.floor((beatMap[beatIndex] - (beatMap[beatIndex] % beatBase)) / beatBase);
   }
   beat++;
 }
 
 function draw() {
-  ctx1.fillStyle = "rgb(0, 0, 0)";
-  ctx1.fillRect(0, 480, 1105, 40);
-  drawD();
-  drawF();
-  drawJ();
-  drawK();
+  drawBackground();
+  drawButtons();
 }
 
 class Note {
+  noteNumber;
+  lane;
+  x;
+  y;
+  width;
+  height;
+  visible;
+  laneBeatNumbers;
+
   //create notes, each lane is independent from each other
   constructor(noteNumber, lane) {
-    if (lane == 1) {
-      this.x = 5;
-      this.laneOneBeatNumber = noteNumber;
-    } else if (lane == 2) {
-      this.x = 280;
-      this.laneTwoBeatNumber = noteNumber;
-    } else if (lane == 3) {
-      this.x = 555;
-      this.laneThreeBeatNumber = noteNumber;
-    } else if (lane == 4) {
-      this.x = 830;
-      this.laneFourBeatNumber = noteNumber;
-    }
+    this.x = this.getX();
+    
+
+    this.laneBeatNumbers = [0, 0, 0, 0];
+    this.laneBeatNumbers[lane - 1] = noteNumber;
+
     this.y = -30;
     this.width = 270;
     this.height = 30;
     this.visible = true;
     this.lane = lane;
   }
-  draw() {
-    //called in update, draws note according to new y value when called
-    if (this.visible == true) {
-      ctx2.fillStyle = "rgb(150, 0, 150)";
-      ctx2.fillRect(this.x, this.y, this.width, this.height);
-    }
+
+  getX() {
+    return noteOffsetX + ((noteOffsetX + noteWidth) * (this.lane - 1));
   }
-  update(deltaTimeMultiplier) {
+
+  /*
+  called in update, draws note according to new y value when called
+  */
+  draw() {
+    if (!this.visible) { return; }
+
+    ctx2.fillStyle = "rgb(150, 0, 150)";
+    ctx2.fillRect(this.x, this.y, this.width, this.height);
+  }
+
+  update() {
     //increases y value and calls draw function
-    ctx2.clearRect(this.x, this.y-10, this.width, this.height+20);
-    this.y += 25 * deltaTimeMultiplier;
+    ctx2.clearRect(this.x, this.y - 10, this.width, this.height + 10);
+    this.y += 25 * deltaTimeOffset;
     //clears note if it falls off screen
-    if (this.y >= 650 && this.visible == true) {
-      if (this.lane == 1) {
-        this.laneOneClear();
-      }
-      if (this.lane == 2) {
-        this.laneTwoClear();
-      }
-      if (this.lane == 3) {
-        this.laneThreeClear();
-      }
-      if (this.lane == 4) {
-        this.laneFourClear();
-      }
+    if ((this.y >= 650) && this.visible) {
+      this.clearLane();
     }
     this.draw();
   }
-  laneOneClear() {
+  clearLane() {
     this.visible = false;
-    ctx2.clearRect(this.x, this.y, this.width, this.height);
+    ctx2.clearRect(this.getX(), this.y, this.width, this.height);
     if (this.y < 485 + 75 && this.y > 485 - 75) {
-          score += 10;
-        } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-          score += 1
-        }
-    laneOneClickNumber++;
-  }
-  laneTwoClear() {
-      this.visible = false;
-      ctx2.clearRect(this.x, this.y, this.width, this.height);
-    if (this.y < 485 + 75 && this.y > 485 - 75) {
-          score += 10;
-        } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-          score += 1
-        }
-      laneTwoClickNumber++;
-  }
-  laneThreeClear() {
-      this.visible = false;
-      ctx2.clearRect(this.x, this.y, this.width, this.height);
-    if (this.y < 485 + 75 && this.y > 485 - 75) {
-          score += 10;
-        } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-          score += 1
-        }
-      laneThreeClickNumber++;
-  }
-  laneFourClear(clickNumber) {
-      this.visible = false;
-      ctx2.clearRect(this.x, this.y, this.width, this.height);
-    if (this.y < 485 + 75 && this.y > 485 - 75) {
-          score += 10;
-        } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-          score += 1
-        }
-      laneFourClickNumber++;
+      score += 10;
+    } else if (this.y < 485 + 115 && this.y > 485 - 115) {
+      score += 1
+    }
+    laneClickNumbers[this.lane - 1]++;
+
   }
 }
 
-
-function updateNote() {
-  notes.forEach((Note) => Note.update(deltaTimeMultiplier));
+function updateNotes() {
+  notes.forEach((Note) => Note.update());
 }
 
 function animate(currentTime) {
   deltaTime = currentTime - previousTime;
-  deltaTimeMultiplier = deltaTime/frameInterval;
-  updateNote();
+  deltaTimeOffset = deltaTime / frameInterval;
+  updateNotes();
   previousTime = currentTime;
   requestAnimationFrame(animate);
 }
@@ -197,6 +179,19 @@ function drawClickK() {
   ctx1.fillRect(830, 485, 270, 30);
   setTimeout(drawK, 60);
 }
+
+function drawBackground() {
+  ctx1.fillStyle = "rgb(0, 0, 0)";
+  ctx1.fillRect(0, 480, 1105, 40);
+}
+
+function drawButtons() {
+  drawD();
+  drawF();
+  drawJ();
+  drawK();
+}
+
 function drawD() {
   ctx1.fillStyle = "rgb(256, 200, 256)";
   ctx1.fillRect(5, 485, 270, 30);
@@ -222,51 +217,35 @@ window.onload = (event) => {
 window.addEventListener("keydown", checkButtonClick, false);
 
 function checkButtonClick(e) {
-  if (e.code == "KeyD") {
-    drawClickD();
-    for (let item of notes) {
-      if (item.laneOneBeatNumber == laneOneClickNumber && !breakLoop1 && item.y>300) {
-        item.laneOneClear(laneOneClickNumber);
-        breakLoop1 = true;
+  let noteToLanes = {
+    "KeyD": [1, drawClickD],
+    "KeyF": [2, drawClickF],
+    "KeyJ": [3, drawClickJ],
+    "KeyK": [4, drawClickK],
+  };
+
+  if (e.code in Object.keys(noteToLanes)) {
+    let dataSet = noteToLanes[e.code];
+    let lane = dataSet[0];
+    let drawClick = dataSet[1];
+  
+    let breakLoop = false;
+  
+    for (let note of notes) {
+      drawClick();
+      if ((note.laneBeatNumbers[lane - 1] === laneClickNumbers[lane - 1]) && !breakLoop && (note.y > 300)) {
+        note.clearLane();
+        breakLoop = true;
       }
     }
-  }
-  breakLoop1 = false;
-  if (e.code == "KeyF") {
-    drawClickF();
-    for (let item of notes) {
-      if (item.laneTwoBeatNumber == laneTwoClickNumber && !breakLoop2 && item.y>300) {
-        item.laneTwoClear(laneTwoClickNumber);
-        breakLoop2 = true;
-      }
-    }
-  }
-  breakLoop2 = false;
-  if (e.code == "KeyJ") {
-    drawClickJ();
-    for (let item of notes) {
-      if (item.laneThreeBeatNumber == laneThreeClickNumber && !breakLoop3 && item.y>300) {
-        item.laneThreeClear(laneThreeClickNumber);
-        breakLoop3 = true;
-      }
-    }
-  }
-  breakLoop3 = false;
-  if (e.code == "KeyK") {
-    drawClickK();
-    for (let item of notes) {
-      if (item.laneFourBeatNumber == laneFourClickNumber && !breakLoop4 && item.y>300) {
-        item.laneFourClear(laneFourClickNumber);
-        breakLoop4 = true;
-      }
-    }
-  }
-  breakLoop4 = false;
+  }  
+
   if (e.code == "Enter") {
     Tone.Transport.start();
   }
   if (e.code == "Escape") {
     Tone.Transport.stop();
   }
+
   document.getElementById('score-display').innerHTML = 'Score = ' + score;
 }
