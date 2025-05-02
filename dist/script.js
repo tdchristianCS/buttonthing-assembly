@@ -35,7 +35,7 @@ var audioPlayer = new Audio('/dist/song.mp3');
 Tone.Transport.schedule((time) => {
   console.log("This function ran at transport time:", time);
   audioPlayer.play();
-}, "+0.6");
+}, "+0.51");
 
 
 
