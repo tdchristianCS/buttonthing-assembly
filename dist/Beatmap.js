@@ -13,5 +13,5 @@ const beatMap = [
 
 
             ];
-//8, 16, 24, 32 every indentation is 8 beats
+//8, 16, 24, 32, 40 every indentation is 8 beats
 beatMap.sort(function(a, b){return a-b});
