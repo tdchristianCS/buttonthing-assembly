@@ -57,7 +57,7 @@ var audioPlayer = new Audio('/dist/song.mp3');
 Tone.Transport.schedule((time) => {
   audioPlayer.play();
   console.log("audio played")
-}, "+0.51");
+}, "+0.57");
 
 
 // I coded this part flawlessly in 5 minutes and now I have no idea what this does
