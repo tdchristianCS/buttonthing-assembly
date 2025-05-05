@@ -16,6 +16,7 @@ const noteWidth = 270;
 
 // App variables. We use var to make them global.
 // If they were const, they'd be global but couldn't change
+var combo = 0;
 var score = 0;
 var beatIndex = 0;
 var beat = 1;
@@ -37,6 +38,7 @@ let deltaTime = 0;
 // Tone...
 Tone.Transport.bpm.value = currentSong.bpm * 4;
 document.getElementById("score-display").innerHTML = 'Score = 0'
+document.getElementById("combo-display").innerHTML = 'x0 combo'
 
 var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
 var audioPlayer = new Audio(currentSong.audioFile);
@@ -125,8 +127,12 @@ class Note {
     ctx2.clearRect(this.x, this.y, this.width, this.height);
     if (this.y < 485 + 75 && this.y > 485 - 75) {
       score += 10;
+      combo ++;
     } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-      score += 1;
+      score += 5;
+      combo = 0;
+    } else {
+      combo = 0;
     }
     laneClickNumbers[this.lane - 1]++;
 
@@ -233,4 +239,5 @@ function checkButtonClick(e) {
   }
 
   document.getElementById('score-display').innerHTML = 'Score = ' + score;
+  document.getElementById("combo-display").innerHTML = 'x' + combo + ' combo';
 }
