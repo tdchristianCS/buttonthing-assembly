@@ -23,22 +23,7 @@ const beatBase = 10;
 // NoteNumbers are unique IDs for each note, independent by column
 // e.g. 3 consecutive notes in column 1 will be numbered 1, 2, 3
 var laneNoteNumbers = [1, 1, 1, 1];
-var laneOneNoteNumber = 1;
-var laneTwoNoteNumber = 1;
-var laneThreeNoteNumber = 1;
-var laneFourNoteNumber = 1;
-
 var laneClickNumbers = [1, 1, 1, 1];
-var laneOneClickNumber = 1;
-var laneTwoClickNumber = 1;
-var laneThreeClickNumber = 1;
-var laneFourClickNumber = 1;
-
-// hack to short-circuit the conditions in the for-loops below
-var breakLoop1 = false;
-var breakLoop2 = false;
-var breakLoop3 = false;
-var breakLoop4 = false;
 
 // Timing/speed/FPS values
 let frames_per_second = 30;
@@ -58,7 +43,6 @@ Tone.Transport.schedule((time) => {
   audioPlayer.play();
   console.log("audio played")
 }, "+0.57");
-
 
 // I coded this part flawlessly in 5 minutes and now I have no idea what this does
 function generateNote() {
@@ -96,12 +80,11 @@ class Note {
   width;
   height;
   visible;
-  laneBeatNumbers;
+  laneBeatNumber;
 
   //create notes, each lane is independent from each other
   constructor(noteNumber, lane) {
-    this.laneBeatNumbers = [0, 0, 0, 0];
-    this.laneBeatNumbers[lane - 1] = noteNumber;
+    this.laneBeatNumber = noteNumber;
 
     this.y = -30;
     this.width = 270;
@@ -109,7 +92,6 @@ class Note {
     this.visible = true;
     this.lane = lane;
     this.x = this.getX();
-
   }
 
   getX() {
@@ -135,6 +117,7 @@ class Note {
     }
     this.draw();
   }
+
   clearLane() {
     this.visible = false;
     ctx2.clearRect(this.x, this.y, this.width, this.height);
@@ -231,9 +214,11 @@ function checkButtonClick(e) {
     let lane = dataSet[0];
     let drawClick = dataSet[1];  
     let breakLoop = false;
+
     drawClick();
+    
     for (let note of notes) {
-      if ((note.laneBeatNumbers[lane - 1] === laneClickNumbers[lane - 1]) && !breakLoop && (note.y > 300)) {
+      if ((note.laneBeatNumber === laneClickNumbers[lane - 1]) && !breakLoop && (note.y > 300)) {
         note.clearLane();
         breakLoop = true;
       }
