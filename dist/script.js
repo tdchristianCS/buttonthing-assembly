@@ -23,6 +23,7 @@ const beatBase = 10;
 // NoteNumbers are unique IDs for each note, independent by column
 // e.g. 3 consecutive notes in column 1 will be numbered 1, 2, 3
 var laneNoteNumbers = [1, 1, 1, 1];
+
 var laneClickNumbers = [1, 1, 1, 1];
 
 // Timing/speed/FPS values
@@ -43,6 +44,7 @@ Tone.Transport.schedule((time) => {
   audioPlayer.play();
   console.log("audio played")
 }, "+0.57");
+
 
 // I coded this part flawlessly in 5 minutes and now I have no idea what this does
 function generateNote() {
@@ -80,11 +82,12 @@ class Note {
   width;
   height;
   visible;
-  laneBeatNumber;
+  laneBeatNumbers;
 
   //create notes, each lane is independent from each other
   constructor(noteNumber, lane) {
-    this.laneBeatNumber = noteNumber;
+    this.laneBeatNumbers = [0, 0, 0, 0];
+    this.laneBeatNumbers[lane - 1] = noteNumber;
 
     this.y = -30;
     this.width = 270;
@@ -92,6 +95,7 @@ class Note {
     this.visible = true;
     this.lane = lane;
     this.x = this.getX();
+
   }
 
   getX() {
@@ -117,7 +121,6 @@ class Note {
     }
     this.draw();
   }
-
   clearLane() {
     this.visible = false;
     ctx2.clearRect(this.x, this.y, this.width, this.height);
@@ -214,11 +217,9 @@ function checkButtonClick(e) {
     let lane = dataSet[0];
     let drawClick = dataSet[1];  
     let breakLoop = false;
-
     drawClick();
-    
     for (let note of notes) {
-      if ((note.laneBeatNumber === laneClickNumbers[lane - 1]) && !breakLoop && (note.y > 300)) {
+      if ((note.laneBeatNumbers[lane - 1] === laneClickNumbers[lane - 1]) && !breakLoop && (note.y > 300)) {
         note.clearLane();
         breakLoop = true;
       }
