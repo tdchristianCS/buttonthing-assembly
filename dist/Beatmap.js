@@ -1,9 +1,16 @@
-const title = "Fight Song";
-const artist = "Eve";
-const bpm = "126";
-const songOffset = 0
+const songs = [];
+class song {
+    constructor(title, artist, bpm, offset, beatMap, audioFile) {
+        this.title = title;
+        this.artist = artist;
+        this.bpm = bpm;
+        this.offset = offset;
+        this.beatMap = beatMap;
+        this.audio = audioFile;
+    }
+}
 
-const beatMap = [
+const fight_song_map = [
 12,14,54,52,92,94,132,134,173,171,213,211,253,251,293,291,
 334,331,374,371,414,411,454,451,494,491,534,531,
 664,673,682,651,693,704,723,742,761,784,804,824,833,842,851,862,871,882,894,903,914,923,931,942,951,962,
@@ -18,4 +25,6 @@ const beatMap = [
 //beatmap format:
 //8, 16, 24, 32,
 //40, 
-beatMap.sort(function(a, b){return a-b});
+fight_song_map.sort(function(a, b){return a-b});
+
+const fight_song = new song("Fight Song", "Eve", "126", "+0.57", fight_song_map, "/dist/fight_song.mp3");

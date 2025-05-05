@@ -1,3 +1,4 @@
+const currentSong = fight_song;
 // Collection of the notes that fall
 const notes = [];
 
@@ -34,15 +35,14 @@ var deltaTimeOffset = 1;
 let deltaTime = 0;
 
 // Tone...
-Tone.Transport.bpm.value = bpm * 4;
+Tone.Transport.bpm.value = currentSong.bpm * 4;
 document.getElementById("score-display").innerHTML = 'Score = 0'
 
 var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
-var audioPlayer = new Audio('/dist/song.mp3');
+var audioPlayer = new Audio(currentSong.audioFile);
 
 Tone.Transport.schedule((time) => {
   audioPlayer.play();
-  console.log("audio played")
 }, "+0.57");
 
 
@@ -50,21 +50,20 @@ Tone.Transport.schedule((time) => {
 function generateNote() {
 
   // All columns of order > 1 are the row (beat) #
-  row = Math.floor((beatMap[beatIndex] - (beatMap[beatIndex] % beatBase)) / beatBase);
+  row = Math.floor((currentSong.beatMap[beatIndex] - (currentSong.beatMap[beatIndex] % beatBase)) / beatBase);
   while (row == beat) {
 
     // Get the ones column of the beat; this is equivalent to the lane
     // Always 1, 2, 3, 4
-    column = beatMap[beatIndex] % beatBase;
+    column = currentSong.beatMap[beatIndex] % beatBase;
 
     // Create and push a new note in the appropriate column, incrementing the note count in that column
     notes.push(new Note(laneNoteNumbers[column - 1], column));
     if (column == 1){
-      console.log(laneNoteNumbers[0], beat);
     }
     laneNoteNumbers[column - 1]++;
     beatIndex++;
-    row = Math.floor((beatMap[beatIndex] - (beatMap[beatIndex] % beatBase)) / beatBase);
+    row = Math.floor((currentSong.beatMap[beatIndex] - (currentSong.beatMap[beatIndex] % beatBase)) / beatBase);
   }
   beat++;
 }
