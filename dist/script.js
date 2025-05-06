@@ -46,6 +46,7 @@ var audioPlayer = new Audio(currentSong.audioFile);
 function playNote() {
   var noteTap = new Audio("/dist/note_tap.mp3");
   noteTap.play();
+  console.log('note played')
 }
 
 Tone.Transport.schedule((time) => {
