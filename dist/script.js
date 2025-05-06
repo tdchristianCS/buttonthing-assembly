@@ -40,9 +40,14 @@ Tone.Transport.bpm.value = currentSong.bpm * 4;
 document.getElementById("score-display").innerHTML = 'Score = 0 | Combo x0'
 
 var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
+
 var audioPlayer = new Audio(currentSong.audioFile);
-var noteTap = new Audio("/dist/note_tap.mp3");
-console.log(currentSong.audioFile);
+
+function playNote() {
+  var noteTap = new Audio("/dist/note_tap.mp3");
+  noteTap.play();
+}
+
 Tone.Transport.schedule((time) => {
   audioPlayer.play();
 }, "+0.57");
@@ -223,7 +228,7 @@ function checkButtonClick(e) {
     let drawClick = dataSet[1];  
     let breakLoop = false;
     drawClick();
-    noteTap.play();
+    playNote();
     for (let note of notes) {
       if ((note.laneBeatNumbers[lane - 1] === laneClickNumbers[lane - 1]) && !breakLoop && (note.y > 300)) {
         note.clearLane();
