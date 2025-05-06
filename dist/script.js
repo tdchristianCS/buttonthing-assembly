@@ -37,12 +37,11 @@ let deltaTime = 0;
 
 // Tone...
 Tone.Transport.bpm.value = currentSong.bpm * 4;
-document.getElementById("score-display").innerHTML = 'Score = 0'
-document.getElementById("combo-display").innerHTML = 'x0 combo'
+document.getElementById("score-display").innerHTML = 'Score = 0 | Combo x0'
 
 var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
 var audioPlayer = new Audio(currentSong.audioFile);
-
+console.log(currentSong.audioFile);
 Tone.Transport.schedule((time) => {
   audioPlayer.play();
 }, "+0.57");
@@ -238,6 +237,5 @@ function checkButtonClick(e) {
     Tone.Transport.stop();
   }
 
-  document.getElementById('score-display').innerHTML = 'Score = ' + score;
-  document.getElementById("combo-display").innerHTML = 'x' + combo + ' combo';
+  document.getElementById('score-display').innerHTML = 'Score = ' + score + ' | Combo x' + combo;
 }
