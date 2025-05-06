@@ -41,6 +41,7 @@ document.getElementById("score-display").innerHTML = 'Score = 0 | Combo x0'
 
 var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
 var audioPlayer = new Audio(currentSong.audioFile);
+var noteTap = new Audio("/dist/note_tap.mp3");
 console.log(currentSong.audioFile);
 Tone.Transport.schedule((time) => {
   audioPlayer.play();
@@ -222,6 +223,7 @@ function checkButtonClick(e) {
     let drawClick = dataSet[1];  
     let breakLoop = false;
     drawClick();
+    noteTap.play();
     for (let note of notes) {
       if ((note.laneBeatNumbers[lane - 1] === laneClickNumbers[lane - 1]) && !breakLoop && (note.y > 300)) {
         note.clearLane();
