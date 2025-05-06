@@ -180,7 +180,6 @@ function drawClickK() {
 function drawBackground() {
   ctx1.fillStyle = "rgb(0, 0, 0)";
   ctx1.fillRect(0, 480, 1105, 40);
-  ctx1.fillRect(0, 0, 5, 650);
   ctx1.fillRect(275, 0, 5, 650);
   ctx1.fillRect(550, 0, 5, 650);
   ctx1.fillRect(825, 0, 5, 650);
