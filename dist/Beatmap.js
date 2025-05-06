@@ -32,4 +32,4 @@ const fight_song_map = [
 //72
 fight_song_map.sort(function(a, b){return a-b});
 
-const fight_song = new song("Fight Song", "Eve", "126", "+0.57", fight_song_map, "/dist/fight_song.mp3");
+const fight_song = new song("Fight Song", "Eve", "126", "+0.57", fight_song_map, "buttonthing/Assets/Music/fight_song.mp3");

@@ -44,7 +44,7 @@ var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
 var audioPlayer = new Audio(currentSong.audioFile);
 
 function playNote() {
-  var noteTap = new Audio("/dist/note_tap.mp3");
+  var noteTap = new Audio("buttonthing/Assets/Music/sound_effects/note_tap.mp3");
   noteTap.play();
   console.log('note played')
 }
