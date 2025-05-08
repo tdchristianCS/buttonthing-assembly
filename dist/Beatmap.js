@@ -34,7 +34,7 @@ const fight_song_map = [
 //beatmap format:
 //8, 16, 24, 32,
 //40, 48, 56, 64,
-//72, 80, 88, 96,
+//72, 80, 88 (edit this i hate it), 96,
 //104, 112,
 fight_song_map.sort(function(a, b){return a-b});
 
