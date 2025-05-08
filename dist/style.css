@@ -1,28 +1,24 @@
 body {
-  background-color: rgb(112,0,79);
+  background-color: rgb(84, 143, 188);
 }
 #canvas-layer-1 {
-  background-color: rgb(256, 220, 256);
+  background-color: rgb(110, 119, 184);
   padding: 0;
-  margin: auto;
   display: block;
   outline: black 3px solid;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position:absolute;
+  left: 50%;
+  transform:
+  translateX(-50%);
 }
 #canvas-layer-2 {
   padding: 0;
-  margin: auto;
   display: block;
   outline: black 3px solid;
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform:
+  translateX(-50%);
 }
 
 #score-display {
@@ -33,5 +29,25 @@ body {
 
 #display-container {
   margin: auto;
-  width: 50%;
+  width: 100%;
+}
+
+#canvasWrapper {
+  position:relative;
+  width: 100%;
+}
+.spacer {
+  font-size:70px;
+  position:relative;
+  height:900px;
+}
+
+.iWantThisVeryBig {
+  font-size: 50px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+.GoodLuckEditingThisCodeWithAllTheseStupidClassNames {
+  font-size: 20px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

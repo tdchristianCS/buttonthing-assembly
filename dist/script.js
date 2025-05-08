@@ -6,6 +6,11 @@ const notes = [];
 const canvas1 = $("#canvas-layer-1");
 const canvas2 = $("#canvas-layer-2");
 
+const noteColor = "rgb(140, 255, 244)";
+const buttonColor = "rgb(66, 251, 155)";
+const buttonClickColor = "rgb(242, 255, 250)";
+const lineColor = "rgb(0, 0, 0)";
+
 // Each canvas has a "drawing context" (similar to a Surface in pygame)
 const ctx1 = canvas1[0].getContext("2d");
 const ctx2 = canvas2[0].getContext("2d");
@@ -113,7 +118,7 @@ class Note {
   */
   draw() {
     if (!this.visible) { return; }
-    ctx2.fillStyle = "rgb(150, 0, 150)";
+    ctx2.fillStyle = noteColor;
     ctx2.fillRect(this.x, this.y, this.width, this.height);
   }
 
@@ -157,28 +162,28 @@ function animate(currentTime) {
 }
 
 function drawClickD() {
-  ctx1.fillStyle = "rgb(256, 160, 256)";
+  ctx1.fillStyle = buttonClickColor;
   ctx1.fillRect(5, 485, 270, 30);
   setTimeout(drawD, 60);
 }
 function drawClickF() {
-  ctx1.fillStyle = "rgb(256, 160, 256)";
+  ctx1.fillStyle = buttonClickColor;
   ctx1.fillRect(280, 485, 270, 30);
   setTimeout(drawF, 60);
 }
 function drawClickJ() {
-  ctx1.fillStyle = "rgb(256, 160, 256)";
+  ctx1.fillStyle = buttonClickColor;
   ctx1.fillRect(555, 485, 270, 30);
   setTimeout(drawJ, 60);
 }
 function drawClickK() {
-  ctx1.fillStyle = "rgb(256, 160, 256)";
+  ctx1.fillStyle = buttonClickColor;
   ctx1.fillRect(830, 485, 270, 30);
   setTimeout(drawK, 60);
 }
 
 function drawBackground() {
-  ctx1.fillStyle = "rgb(0, 0, 0)";
+  ctx1.fillStyle = lineColor;
   ctx1.fillRect(0, 480, 1105, 40);
   ctx1.fillRect(275, 0, 5, 650);
   ctx1.fillRect(550, 0, 5, 650);
@@ -193,19 +198,19 @@ function drawButtons() {
 }
 
 function drawD() {
-  ctx1.fillStyle = "rgb(256, 200, 256)";
+  ctx1.fillStyle = buttonColor;
   ctx1.fillRect(5, 485, 270, 30);
 }
 function drawF() {
-  ctx1.fillStyle = "rgb(256, 200, 256)";
+  ctx1.fillStyle = buttonColor;
   ctx1.fillRect(280, 485, 270, 30);
 }
 function drawJ() {
-  ctx1.fillStyle = "rgb(256, 200, 256)";
+  ctx1.fillStyle = buttonColor;
   ctx1.fillRect(555, 485, 270, 30);
 }
 function drawK() {
-  ctx1.fillStyle = "rgb(256, 200, 256)";
+  ctx1.fillStyle = buttonColor;
   ctx1.fillRect(830, 485, 270, 30);
 }
 
