@@ -22,8 +22,7 @@ body {
 }
 
 #score-display {
-  font-size:70px;
-  color:aquamarine;
+  color:rgb(0, 255, 145);
   text-align:center;
 }
 
