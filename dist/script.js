@@ -11,6 +11,8 @@ const buttonColor = "rgb(66, 251, 155)";
 const buttonClickColor = "rgb(242, 255, 250)";
 const lineColor = "rgb(0, 0, 0)";
 
+const notesPerBeat = currentSong.notesPerBeat;
+
 // Each canvas has a "drawing context" (similar to a Surface in pygame)
 const ctx1 = canvas1[0].getContext("2d");
 const ctx2 = canvas2[0].getContext("2d");
@@ -41,7 +43,7 @@ var deltaTimeOffset = 1;
 let deltaTime = 0;
 
 // Tone...
-Tone.Transport.bpm.value = currentSong.bpm * 4;
+Tone.Transport.bpm.value = currentSong.bpm * notesPerBeat;
 document.getElementById("score-display").innerHTML = 'Score = 0 | Combo x0'
 
 var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
@@ -55,7 +57,7 @@ function playNote() {
 
 Tone.Transport.schedule((time) => {
   audioPlayer.play();
-}, "+0.57");
+}, currentSong.offset);
 
 
 // I coded this part flawlessly in 5 minutes and now I have no idea what this does

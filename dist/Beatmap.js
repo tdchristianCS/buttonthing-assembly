@@ -1,12 +1,13 @@
 const songs = [];
 class song {
-    constructor(title, artist, bpm, offset, beatMap, audioFile) {
+    constructor(title, artist, bpm, offset, beatMap, audioFile, notesPerBeat) {
         this.title = title;
         this.artist = artist;
         this.bpm = bpm;
         this.offset = offset;
         this.beatMap = beatMap;
         this.audioFile = audioFile;
+        this.notesPerBeat = notesPerBeat;
     }
 }
 
@@ -38,4 +39,4 @@ const fight_song_map = [
 //104, 112,
 fight_song_map.sort(function(a, b){return a-b});
 
-const fight_song = new song("Fight Song", "Eve", "126", "+0.57", fight_song_map, "../Assets/Music/fight_song.mp3");
+const fight_song = new song("Fight Song", "Eve", "126", "+0.57", fight_song_map, "../Assets/Music/fight_song.mp3", 4);
