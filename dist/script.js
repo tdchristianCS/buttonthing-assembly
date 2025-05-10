@@ -8,7 +8,7 @@ const canvas2 = $("#canvas-layer-2");
 
 const noteColor = "rgb(140, 255, 244)";
 const buttonColor = "rgb(66, 251, 155)";
-const buttonClickColor = "rgb(242, 255, 250)";
+const buttonClickColor = "rgb(219, 255, 241)";
 const lineColor = "rgb(0, 0, 0)";
 
 const notesPerBeat = currentSong.notesPerBeat;
