@@ -53,7 +53,7 @@ const bad_apple_map = [
 //72, 80, 88, 96,
 //104, 112, 120, 128,
 //136, 144, 152, 160,
-//168, 176, 184, 
+//168, 176,(timing kind of off here) 184, finish
 fight_song_map.sort(function(a, b){return a-b});
 bad_apple_map.sort(function(a, b){return a-b});
 
