@@ -27,6 +27,7 @@ var combo = 0;
 var score = 0;
 var beatIndex = 0;
 var beat = 1;
+var comboMultiplier = 1;
 const beatBase = 10;
 
 // NoteNumbers are unique IDs for each note, independent by column
@@ -137,8 +138,14 @@ class Note {
   clearLane() {
     this.visible = false;
     ctx2.clearRect(this.x, this.y, this.width, this.height);
+    if (combo >= 200) {
+      comboMultiplier = 3
+    }
+    else if (combo >= 100) {
+      comboMultiplier = 2
+    }
     if (this.y < 485 + 75 && this.y > 485 - 75) {
-      score += 10;
+      score += 10 * comboMultiplier;
       combo ++;
     } else if (this.y < 485 + 115 && this.y > 485 - 115) {
       score += 5;
