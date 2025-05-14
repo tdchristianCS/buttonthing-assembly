@@ -47,6 +47,19 @@ let deltaTime = 0;
 Tone.Transport.bpm.value = currentSong.bpm * notesPerBeat;
 document.getElementById("score-display").innerHTML = 'Score = 0 | Combo x0'
 
+function showHelp() {
+  $('#help').removeClass('hide');
+  $('#game').addClass('hide');
+}
+
+function hideHelp() {
+  $('#help').addClass('hide');
+  $('#game').removeClass('hide');
+}
+
+$('#help-button').click(showHelp);
+$('#back-button').click(hideHelp);
+
 var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
 
 var audioPlayer = new Audio(currentSong.audioFile);
@@ -138,10 +151,10 @@ class Note {
   clearLane() {
     this.visible = false;
     ctx2.clearRect(this.x, this.y, this.width, this.height);
-    if (combo >= 200) {
+    if (combo >= 100) {
       comboMultiplier = 3
     }
-    else if (combo >= 100) {
+    else if (combo >= 20) {
       comboMultiplier = 2
     }
     if (this.y < 485 + 75 && this.y > 485 - 75) {
