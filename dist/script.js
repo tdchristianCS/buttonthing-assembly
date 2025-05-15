@@ -1,4 +1,4 @@
-const currentSong = bad_apple;
+const currentSong = fight_song;
 // Collection of the notes that fall
 const notes = [];
 
