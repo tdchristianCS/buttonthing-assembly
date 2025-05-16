@@ -161,8 +161,8 @@ class Note {
       score += 10 * comboMultiplier;
       combo ++;
     } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-      score += 5;
       combo = 0;
+      score += 10;
     } else {
       combo = 0;
     }

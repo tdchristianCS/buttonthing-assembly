@@ -42,12 +42,12 @@ body {
   pointer-events: none;
 }
 
-.iWantThisVeryBig {
+.big-text {
   font-size: 50px;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 
-.GoodLuckEditingThisCodeWithAllTheseStupidClassNames {
+.normal-text {
   font-size: 20px;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
