@@ -1,4 +1,4 @@
-const currentSong = bad_apple;
+const currentSong = fight_song;
 // Collection of the notes that fall
 const notes = [];
 
@@ -60,12 +60,12 @@ function hideHelp() {
 $('#help-button').click(showHelp);
 $('#back-button').click(hideHelp);
 
-var generateNotes = new Tone.Loop(generateNote, "4n").start(0);
+var generateNotes = new Tone.Loop(generateNote, "4n").start(2);
 
 var audioPlayer = new Audio(currentSong.audioFile);
 
 function playNote() {
-  var noteTap = new Audio("../Assets/Music/sound_effects/note_tap.mp3");
+  var noteTap = new Audio("../Assets/sound_effects/note_tap.mp3");
   noteTap.play();
 }
 
@@ -161,8 +161,8 @@ class Note {
       score += 10 * comboMultiplier;
       combo ++;
     } else if (this.y < 485 + 115 && this.y > 485 - 115) {
+      score += 5;
       combo = 0;
-      score += 10;
     } else {
       combo = 0;
     }
