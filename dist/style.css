@@ -65,3 +65,15 @@ button {
   right: 0px;
   background-color:rgb(0, 255, 145);
 }
+
+select,
+::picker(select) {
+  appearance: base-select;
+}
+
+select {
+  border: 2px solid rgb(0,0,0);
+  background: rgb(0, 255, 145);
+  padding: 15px;
+  transition: 0.4s;
+}
