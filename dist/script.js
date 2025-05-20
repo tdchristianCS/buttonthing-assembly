@@ -1,4 +1,5 @@
-const currentSong = fight_song;
+var currentSong = "";
+
 // Collection of the notes that fall
 const notes = [];
 
@@ -10,8 +11,6 @@ const noteColor = "rgb(140, 255, 244)";
 const buttonColor = "rgb(66, 251, 155)";
 const buttonClickColor = "rgb(219, 255, 241)";
 const lineColor = "rgb(0, 0, 0)";
-
-const notesPerBeat = currentSong.notesPerBeat;
 
 // Each canvas has a "drawing context" (similar to a Surface in pygame)
 const ctx1 = canvas1[0].getContext("2d");
@@ -43,8 +42,6 @@ let frameInterval = 1000 / frames_per_second;
 var deltaTimeOffset = 1;
 let deltaTime = 0;
 
-// Tone...
-Tone.Transport.bpm.value = currentSong.bpm * notesPerBeat;
 document.getElementById("score-display").innerHTML = 'Score = 0 | Combo x0'
 
 function showHelp() {
@@ -60,19 +57,10 @@ function hideHelp() {
 $('#help-button').click(showHelp);
 $('#back-button').click(hideHelp);
 
-var generateNotes = new Tone.Loop(generateNote, "4n").start(2);
-
-var audioPlayer = new Audio(currentSong.audioFile);
-
 function playNote() {
   var noteTap = new Audio("../Assets/sound_effects/note_tap.mp3");
   noteTap.play();
 }
-
-Tone.Transport.schedule((time) => {
-  audioPlayer.play();
-}, currentSong.offset);
-
 
 // I coded this part flawlessly in 5 minutes and now I have no idea what this does
 function generateNote() {
@@ -267,8 +255,29 @@ function checkButtonClick(e) {
     }
   }  
 
-  if (e.code == "Enter") {
+  if (e.code == "Enter" && document.getElementById('song-select').value != "") {
+    if (document.getElementById('song-select').value == 'fight_song') {
+      currentSong = fight_song;
+    }
+    if (document.getElementById('song-select').value == 'bad_apple') {
+      currentSong = bad_apple;
+    }
+    const notesPerBeat = currentSong.notesPerBeat;
+
+// Tone...
+Tone.Transport.bpm.value = currentSong.bpm * notesPerBeat;
+
+var generateNotes = new Tone.Loop(generateNote, "4n").start(2);
+
+var audioPlayer = new Audio(currentSong.audioFile);
+
+Tone.Transport.schedule((time) => {
+  audioPlayer.play();
+}, currentSong.offset);
+
+
     Tone.Transport.start();
+    document.getElementById('song-select').value = "";
   }
   if (e.code == "Escape") {
     Tone.Transport.stop();
