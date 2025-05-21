@@ -1,7 +1,6 @@
 var currentSong = "";
 // Collection of the notes that fall
 const notes = [];
-
 // Canvas for graphics (similar to a window in Pygame)
 const canvas1 = $("#canvas-layer-1");
 const canvas2 = $("#canvas-layer-2");
