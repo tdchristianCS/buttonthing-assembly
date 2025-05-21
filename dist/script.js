@@ -129,7 +129,7 @@ class Note {
   update() {
     //increases y value and calls draw function
     ctx2.clearRect(this.x, this.y - 10, this.width, this.height + 10);
-    this.y += 25 * deltaTimeOffset;
+    this.y += currentSong.noteSpeed * deltaTimeOffset;
     //clears note if it falls off screen
     if ((this.y >= 650) && this.visible) {
       this.clearLane();
