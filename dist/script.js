@@ -1,5 +1,4 @@
 var currentSong = "";
-
 // Collection of the notes that fall
 const notes = [];
 

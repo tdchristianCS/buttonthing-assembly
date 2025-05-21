@@ -65,6 +65,9 @@ const bad_apple_map = [
 14411,14472,14533,14594,14654,14773,14832,14891,14893,15013,15011,15132,15134,15172,15212,15252,15292,15332,15254,
 
 15373,15434,15731,15792,15853,15914,15973,16032,16093,15493,15552,15613,16212,16273,
+
+
+
 ];
 
 //beatmap format
@@ -78,4 +81,4 @@ fight_song_map.sort(function(a, b){return a-b});
 bad_apple_map.sort(function(a, b){return a-b});
 
 const fight_song = new song("Fight Song", "Eve", "126", "+2.59", fight_song_map, "../Assets/Music/fight_song.mp3", 4, 25);
-const bad_apple = new song("Bad Apple", "Zun", "138", "+1.86", bad_apple_map, "../Assets/Music/bad_apple.mp3", 12, 35)
+const bad_apple = new song("Bad Apple", "Zun", "138", "+1.86", bad_apple_map, "../Assets/Music/bad_apple.mp3", 12, 35);
