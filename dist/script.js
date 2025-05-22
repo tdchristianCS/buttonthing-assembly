@@ -137,7 +137,7 @@ class Note {
   clearLane() {
     this.visible = false;
     ctx2.clearRect(this.x, this.y, this.width, this.height);
-    if (combo >= 30) {
+    if (combo >= 50) {
       comboMultiplier = 3;
     }
     else if (combo >= 10) {
