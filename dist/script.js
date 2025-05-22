@@ -138,16 +138,15 @@ class Note {
     this.visible = false;
     ctx2.clearRect(this.x, this.y, this.width, this.height);
     if (combo >= 30) {
-      comboMultiplier = 3
+      comboMultiplier = 3;
     }
     else if (combo >= 10) {
-      comboMultiplier = 2
+      comboMultiplier = 2;
     }
     if (this.y < 485 + 75 && this.y > 485 - 75) {
       score += 10 * comboMultiplier;
       combo ++;
     } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-      score += 5;
       combo = 0;
     } else {
       combo = 0;
