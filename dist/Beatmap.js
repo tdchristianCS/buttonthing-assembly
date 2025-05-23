@@ -81,5 +81,5 @@ const bad_apple_map = [
 fight_song_map.sort(function(a, b){return a-b});
 bad_apple_map.sort(function(a, b){return a-b});
 
-const fight_song = new song("Fight Song", "Eve", "126", "+2.59", fight_song_map, "../Assets/Music/fight_song.mp3", 4, 25);
-const bad_apple = new song("Bad Apple", "Zun", "138", "+1.86", bad_apple_map, "../Assets/Music/bad_apple.mp3", 12, 30);
+const fight_song = new song("Fight Song", "Eve", "126", "+2.55", fight_song_map, "../Assets/Music/fight_song.mp3", 4, 25);
+const bad_apple = new song("Bad Apple", "Zun", "138", "+1.72", bad_apple_map, "../Assets/Music/bad_apple.mp3", 12, 30);
