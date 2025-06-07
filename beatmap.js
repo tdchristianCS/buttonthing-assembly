@@ -1,4 +1,3 @@
-const songs = [];
 class song {
     constructor(title, artist, bpm, offset, beatMap, audioFile, notesPerBeat, noteSpeed) {
         this.title = title;
@@ -83,3 +82,8 @@ bad_apple_map.sort(function(a, b){return a-b});
 
 const fight_song = new song("Fight Song", "Eve", "126", "+2.55", fight_song_map, "../Assets/Music/fight_song.mp3", 4, 25);
 const bad_apple = new song("Bad Apple", "Zun", "138", "+1.72", bad_apple_map, "../Assets/Music/bad_apple.mp3", 12, 30);
+
+const songs = {
+    fight_song: fight_song,
+    bad_apple: bad_apple
+}

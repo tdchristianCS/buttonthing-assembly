@@ -1,13 +1,12 @@
-var currentSong = "";
-// Collection of the notes that fall
-const notes = [];
 // Canvas for graphics (similar to a window in Pygame)
 const canvas1 = $("#canvas-layer-1");
 const canvas2 = $("#canvas-layer-2");
 
 const noteColor = "rgb(140, 255, 244)";
-const buttonColor = "rgb(66, 251, 155)";
+const buttonNormalColor = "rgb(66, 251, 155)";
 const buttonClickColor = "rgb(219, 255, 241)";
+const textNormalColor = "rgb(0, 0, 0)";
+const textClickColor = "rgb(0, 0, 0)";
 const lineColor = "rgb(0, 0, 0)";
 
 // Each canvas has a "drawing context" (similar to a Surface in pygame)
@@ -26,6 +25,11 @@ var beatIndex = 0;
 var beat = 1;
 var comboMultiplier = 1;
 const beatBase = 10;
+const notes = [];
+var currentSong = "";
+
+// 0 - stopped. 1 - playing.
+var state = 0;
 
 // NoteNumbers are unique IDs for each note, independent by column
 // e.g. 3 consecutive notes in column 1 will be numbered 1, 2, 3
@@ -40,245 +44,280 @@ let frameInterval = 1000 / frames_per_second;
 var deltaTimeOffset = 1;
 let deltaTime = 0;
 
-document.getElementById("score-display").innerHTML = 'Score = 0 | Combo x0'
+const updateScore = () => {
+    let text = `Score = ${score} | Combo x${combo}`;
+    document.getElementById("score-display").innerHTML = text;
+}
 
 function showHelp() {
-  $('#help').removeClass('hide');
-  $('#game').addClass('hide');
+    $('#helpWrap').removeClass('hide');
+    $('#back-button').removeClass('hide');
+    $('#canvasWrap').addClass('hide');
+    $('#help-button').addClass('hide');
 }
 
 function hideHelp() {
-  $('#help').addClass('hide');
-  $('#game').removeClass('hide');
+    $('#helpWrap').addClass('hide');
+    $('#back-button').addClass('hide');
+    $('#canvasWrap').removeClass('hide');
+    $('#help-button').removeClass('hide');
 }
 
 $('#help-button').click(showHelp);
 $('#back-button').click(hideHelp);
 
 function playNote() {
-  var noteTap = new Audio("../Assets/sound_effects/note_tap.mp3");
-  noteTap.play();
+    var noteTap = new Audio("../Assets/sound_effects/note_tap.mp3");
+    noteTap.play();
 }
 
 // I coded this part flawlessly in 5 minutes and now I have no idea what this does
 function generateNote() {
 
-  // All columns of order > 1 are the row (beat) #
-  row = Math.floor((currentSong.beatMap[beatIndex] - (currentSong.beatMap[beatIndex] % beatBase)) / beatBase);
-  while (row == beat) {
-
-    // Get the ones column of the beat; this is equivalent to the lane
-    // Always 1, 2, 3, 4
-    column = currentSong.beatMap[beatIndex] % beatBase;
-
-    // Create and push a new note in the appropriate column, incrementing the note count in that column
-    notes.push(new Note(laneNoteNumbers[column - 1], column));
-    if (column == 1){
-    }
-    laneNoteNumbers[column - 1]++;
-    beatIndex++;
+    // All columns of order > 1 are the row (beat) #
     row = Math.floor((currentSong.beatMap[beatIndex] - (currentSong.beatMap[beatIndex] % beatBase)) / beatBase);
-  }
-  beat++;
+    while (row == beat) {
+
+        // Get the ones column of the beat; this is equivalent to the lane
+        // Always 1, 2, 3, 4
+        column = currentSong.beatMap[beatIndex] % beatBase;
+
+        // Create and push a new note in the appropriate column, incrementing the note count in that column
+        notes.push(new Note(laneNoteNumbers[column - 1], column));
+        if (column == 1) {
+        }
+        laneNoteNumbers[column - 1]++;
+        beatIndex++;
+        row = Math.floor((currentSong.beatMap[beatIndex] - (currentSong.beatMap[beatIndex] % beatBase)) / beatBase);
+    }
+    beat++;
 }
 
 function draw() {
-  drawBackground();
-  drawButtons();
+    drawBackground();
+    drawButtons();
 }
 
 class Note {
-  noteNumber;
-  lane;
-  x;
-  y;
-  width;
-  height;
-  visible;
-  laneBeatNumbers;
+    noteNumber;
+    lane;
+    x;
+    y;
+    width;
+    height;
+    visible;
+    laneBeatNumbers;
 
-  //create notes, each lane is independent from each other
-  constructor(noteNumber, lane) {
-    this.laneBeatNumbers = [0, 0, 0, 0];
-    this.laneBeatNumbers[lane - 1] = noteNumber;
+    //create notes, each lane is independent from each other
+    constructor(noteNumber, lane) {
+        this.laneBeatNumbers = [0, 0, 0, 0];
+        this.laneBeatNumbers[lane - 1] = noteNumber;
 
-    this.y = -30;
-    this.width = 270;
-    this.height = 30;
-    this.visible = true;
-    this.lane = lane;
-    this.x = this.getX();
+        this.y = -30;
+        this.width = 270;
+        this.height = 30;
+        this.visible = true;
+        this.lane = lane;
+        this.x = this.getX();
 
-  }
-
-  getX() {
-    return noteOffsetX + ((noteOffsetX + noteWidth) * (this.lane - 1));
-  }
-
-  /*
-  called in update, draws note according to new y value when called
-  */
-  draw() {
-    if (!this.visible) { return; }
-    ctx2.fillStyle = noteColor;
-    ctx2.fillRect(this.x, this.y, this.width, this.height);
-  }
-
-  update() {
-    //increases y value and calls draw function
-    ctx2.clearRect(this.x, this.y - 10, this.width, this.height + 10);
-    this.y += currentSong.noteSpeed * deltaTimeOffset;
-    //clears note if it falls off screen
-    if ((this.y >= 650) && this.visible) {
-      this.clearLane();
     }
-    this.draw();
-  }
-  clearLane() {
-    this.visible = false;
-    ctx2.clearRect(this.x, this.y, this.width, this.height);
-    if (combo >= 50) {
-      comboMultiplier = 3;
-    }
-    else if (combo >= 10) {
-      comboMultiplier = 2;
-    }
-    if (this.y < 485 + 75 && this.y > 485 - 75) {
-      score += 10 * comboMultiplier;
-      combo ++;
-    } else if (this.y < 485 + 115 && this.y > 485 - 115) {
-      combo = 0;
-    } else {
-      combo = 0;
-    }
-    laneClickNumbers[this.lane - 1]++;
 
-  }
+    getX() {
+        return noteOffsetX + ((noteOffsetX + noteWidth) * (this.lane - 1));
+    }
+
+    /*
+    called in update, draws note according to new y value when called
+    */
+    draw() {
+        if (!this.visible) {
+            return;
+        }
+        ctx2.fillStyle = noteColor;
+        ctx2.fillRect(this.x, this.y, this.width, this.height);
+    }
+
+    update() {
+        //increases y value and calls draw function
+        ctx2.clearRect(this.x, this.y - 10, this.width, this.height + 10);
+        this.y += currentSong.noteSpeed * deltaTimeOffset;
+        //clears note if it falls off screen
+        if ((this.y >= 650) && this.visible) {
+            this.clearLane();
+        }
+        this.draw();
+    }
+
+    clearLane() {
+        this.visible = false;
+        ctx2.clearRect(this.x, this.y, this.width, this.height);
+        if (combo >= 50) {
+            comboMultiplier = 3;
+        } else if (combo >= 10) {
+            comboMultiplier = 2;
+        }
+        if (this.y < 485 + 75 && this.y > 485 - 75) {
+            score += 10 * comboMultiplier;
+            combo++;
+        } else if (this.y < 485 + 115 && this.y > 485 - 115) {
+            combo = 0;
+        } else {
+            combo = 0;
+        }
+        laneClickNumbers[this.lane - 1]++;
+
+    }
 }
 
 function updateNotes() {
-  notes.forEach((Note) => Note.update());
+    notes.forEach((Note) => Note.update());
 }
 
 function animate(currentTime) {
-  deltaTime = currentTime - previousTime;
-  deltaTimeOffset = deltaTime / frameInterval;
-  updateNotes();
-  previousTime = currentTime;
-  requestAnimationFrame(animate);
+    deltaTime = currentTime - previousTime;
+    deltaTimeOffset = deltaTime / frameInterval;
+    updateNotes();
+    previousTime = currentTime;
+    requestAnimationFrame(animate);
 }
 
-function drawClickD() {
-  ctx1.fillStyle = buttonClickColor;
-  ctx1.fillRect(5, 485, 270, 30);
-  setTimeout(drawD, 60);
-}
-function drawClickF() {
-  ctx1.fillStyle = buttonClickColor;
-  ctx1.fillRect(280, 485, 270, 30);
-  setTimeout(drawF, 60);
-}
-function drawClickJ() {
-  ctx1.fillStyle = buttonClickColor;
-  ctx1.fillRect(555, 485, 270, 30);
-  setTimeout(drawJ, 60);
-}
-function drawClickK() {
-  ctx1.fillStyle = buttonClickColor;
-  ctx1.fillRect(830, 485, 270, 30);
-  setTimeout(drawK, 60);
-}
-
-function drawBackground() {
-  ctx1.fillStyle = lineColor;
-  ctx1.fillRect(0, 480, 1105, 40);
-  ctx1.fillRect(275, 0, 5, 650);
-  ctx1.fillRect(550, 0, 5, 650);
-  ctx1.fillRect(825, 0, 5, 650);
-}
-
-function drawButtons() {
-  drawD();
-  drawF();
-  drawJ();
-  drawK();
-}
-
-function drawD() {
-  ctx1.fillStyle = buttonColor;
-  ctx1.fillRect(5, 485, 270, 30);
-}
-function drawF() {
-  ctx1.fillStyle = buttonColor;
-  ctx1.fillRect(280, 485, 270, 30);
-}
-function drawJ() {
-  ctx1.fillStyle = buttonColor;
-  ctx1.fillRect(555, 485, 270, 30);
-}
-function drawK() {
-  ctx1.fillStyle = buttonColor;
-  ctx1.fillRect(830, 485, 270, 30);
-}
-
-window.onload = (event) => {
-  draw();
-  animate();
-}
-
-window.addEventListener("keydown", checkButtonClick, false);
-
-function checkButtonClick(e) {
-  let noteToLanes = {
+const noteToLanes = {
     "KeyD": [1, drawClickD],
     "KeyF": [2, drawClickF],
     "KeyJ": [3, drawClickJ],
     "KeyK": [4, drawClickK],
-  };
-  
+};
 
-  if (Object.keys(noteToLanes).includes(e.code)) {
+function drawBackground() {
+    ctx1.fillStyle = lineColor;
+    ctx1.fillRect(0, 480, 1105, 40);
+    ctx1.fillRect(275, 0, 5, 650);
+    ctx1.fillRect(550, 0, 5, 650);
+    ctx1.fillRect(825, 0, 5, 650);
+}
+
+function drawButtons() {
+    drawD();
+    drawF();
+    drawJ();
+    drawK();
+}
+
+function drawButton(x, text, buttonColor, textColor) {
+    ctx1.fillStyle = buttonColor;
+    ctx1.fillRect(x, 485, 270, 30);
+
+    ctx1.font = "30px Segoe UI";
+    ctx1.fillStyle = textColor;
+    ctx1.fillText(text, x + 120, 510)
+}
+
+function drawNormalButton(x, text) {
+    drawButton(x, text, buttonNormalColor, textNormalColor);
+}
+
+function drawClickButton(x, text, resumeCB) {
+    drawButton(x, text, buttonClickColor, textClickColor);
+    setTimeout(resumeCB, 60);
+}
+
+function drawD() {
+    drawNormalButton(5, "D");
+}
+
+function drawF() {
+    drawNormalButton(280, "F");
+}
+
+function drawJ() {
+    drawNormalButton(555, "J");
+}
+
+function drawK() {
+    drawNormalButton(830, "K");
+}
+
+function drawClickD() {
+    drawClickButton(5, "D", drawD);
+}
+
+function drawClickF() {
+    drawClickButton(280, "F", drawF);
+}
+
+function drawClickJ() {
+    drawClickButton(555, "J", drawJ);
+}
+
+function drawClickK() {
+    drawClickButton(830, "K", drawK);
+}
+
+function handleLaneClick (e) {
     let dataSet = noteToLanes[e.code];
     let lane = dataSet[0];
-    let drawClick = dataSet[1];  
+    let drawClick = dataSet[1];
     let breakLoop = false;
     drawClick();
     playNote();
     for (let note of notes) {
-      if ((note.laneBeatNumbers[lane - 1] === laneClickNumbers[lane - 1]) && !breakLoop && (note.y > 300)) {
-        note.clearLane();
-        breakLoop = true;
-      }
+        if ((note.laneBeatNumbers[lane - 1] === laneClickNumbers[lane - 1]) && !breakLoop && (note.y > 300)) {
+            note.clearLane();
+            breakLoop = true;
+        }
     }
-  }  
+}
 
-  if (e.code == "Enter" && document.getElementById('song-select').value != "") {
-    if (document.getElementById('song-select').value == 'fight_song') {
-      currentSong = fight_song;
+function start () {
+    let select = document.getElementById('song-select');
+    if (select.value === "") {
+        return;
     }
-    if (document.getElementById('song-select').value == 'bad_apple') {
-      currentSong = bad_apple;
-    }
+
+    currentSong = songs[select.value];
     const notesPerBeat = currentSong.notesPerBeat;
+    Tone.Transport.bpm.value = currentSong.bpm * notesPerBeat;
 
-// Tone...
-Tone.Transport.bpm.value = currentSong.bpm * notesPerBeat;
+    var generateNotes = new Tone.Loop(generateNote, "4n").start(2);
+    var audioPlayer = new Audio(currentSong.audioFile);
 
-var generateNotes = new Tone.Loop(generateNote, "4n").start(2);
-
-var audioPlayer = new Audio(currentSong.audioFile);
-
-Tone.Transport.schedule((time) => {
-  audioPlayer.play();
-}, currentSong.offset);
-
+    Tone.Transport.schedule((time) => {
+        audioPlayer.play();
+    }, currentSong.offset);
 
     Tone.Transport.start();
-    document.getElementById('song-select').value = "";
-  }
-  if (e.code == "Escape") {
-    Tone.Transport.stop();
-  }
-
-  document.getElementById('score-display').innerHTML = 'Score = ' + score + ' | Combo x' + combo;
 }
+
+function stop() {
+    Tone.Transport.stop();
+    score = 0;
+    combo = 0;
+    updateScore();
+}
+
+function handleKeydown(e) {
+    if (Object.keys(noteToLanes).includes(e.code)) {
+        handleLaneClick(e);
+    }
+
+    else if (e.code === "Enter") {
+        start();
+    }
+
+    else if (e.code === "Escape") {
+        stop();
+    }
+
+    updateScore();
+}
+
+function init() {
+    draw();
+    animate();
+    updateScore();
+}
+
+$(document).keydown(handleKeydown);
+$('#btnStart').click(start);
+$('#btnStop').click(stop);
+$(document).ready(init);
