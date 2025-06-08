@@ -57,16 +57,16 @@ const updateScore = () => {
 
 function showHelp() {
     $('#helpWrap').removeClass('hide');
-    $('#back-button').removeClass('hide');
     $('#canvasWrap').addClass('hide');
-    $('#help-button').addClass('hide');
+    $('#btnBack').removeClass('hide');
+    $('#btnHelp').addClass('hide');
 }
 
 function hideHelp() {
     $('#helpWrap').addClass('hide');
-    $('#back-button').addClass('hide');
     $('#canvasWrap').removeClass('hide');
-    $('#help-button').removeClass('hide');
+    $('#btnBack').addClass('hide');
+    $('#btnHelp').removeClass('hide');
 }
 
 function playNote() {
