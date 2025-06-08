@@ -2,20 +2,29 @@
 const canvas1 = $("#canvas-layer-1");
 const canvas2 = $("#canvas-layer-2");
 
+// Each canvas has a "drawing context" (similar to a Surface in pygame)
+const ctx1 = canvas1[0].getContext("2d");
+const ctx2 = canvas2[0].getContext("2d");
+
+// graphical constants
+const canvasW = 1105;
+const canvasH = 650;
+const laneH = 480;
+const laneW = 275;
+const noteOffsetX = 5;
+const noteOffsetY = 5;
+const buttonY = laneH + noteOffsetY;
+const buttonW = laneW - noteOffsetX;
+const buttonH = 30;
+const noteWidth = laneW - noteOffsetX;
+
+// colors
 const noteColor = "rgb(140, 255, 244)";
 const buttonNormalColor = "rgb(66, 251, 155)";
 const buttonClickColor = "rgb(219, 255, 241)";
 const textNormalColor = "rgb(0, 0, 0)";
 const textClickColor = "rgb(0, 0, 0)";
 const lineColor = "rgb(0, 0, 0)";
-
-// Each canvas has a "drawing context" (similar to a Surface in pygame)
-const ctx1 = canvas1[0].getContext("2d");
-const ctx2 = canvas2[0].getContext("2d");
-
-// graphical constants
-const noteOffsetX = 5;
-const noteWidth = 270;
 
 // App variables. We use var to make them global.
 // If they were const, they'd be global but couldn't change
@@ -24,23 +33,20 @@ var score = 0;
 var beatIndex = 0;
 var beat = 1;
 var comboMultiplier = 1;
-const beatBase = 10;
-const notes = [];
+var beatBase = 10;
+var notes = [];
 var currentSong = "";
-
-// 0 - stopped. 1 - playing.
-var state = 0;
+var state = 0; // 0 - stopped. 1 - playing.
 
 // NoteNumbers are unique IDs for each note, independent by column
 // e.g. 3 consecutive notes in column 1 will be numbered 1, 2, 3
 var laneNoteNumbers = [1, 1, 1, 1];
-
 var laneClickNumbers = [1, 1, 1, 1];
 
 // Timing/speed/FPS values
 let frames_per_second = 30;
 let previousTime = performance.now();
-let frameInterval = 1000 / frames_per_second;
+let frameInterval = 1_000 / frames_per_second;
 var deltaTimeOffset = 1;
 let deltaTime = 0;
 
@@ -63,9 +69,6 @@ function hideHelp() {
     $('#help-button').removeClass('hide');
 }
 
-$('#help-button').click(showHelp);
-$('#back-button').click(hideHelp);
-
 function playNote() {
     var noteTap = new Audio("../Assets/sound_effects/note_tap.mp3");
     noteTap.play();
@@ -76,7 +79,7 @@ function generateNote() {
 
     // All columns of order > 1 are the row (beat) #
     row = Math.floor((currentSong.beatMap[beatIndex] - (currentSong.beatMap[beatIndex] % beatBase)) / beatBase);
-    while (row == beat) {
+    while (row === beat) {
 
         // Get the ones column of the beat; this is equivalent to the lane
         // Always 1, 2, 3, 4
@@ -84,8 +87,6 @@ function generateNote() {
 
         // Create and push a new note in the appropriate column, incrementing the note count in that column
         notes.push(new Note(laneNoteNumbers[column - 1], column));
-        if (column == 1) {
-        }
         laneNoteNumbers[column - 1]++;
         beatIndex++;
         row = Math.floor((currentSong.beatMap[beatIndex] - (currentSong.beatMap[beatIndex] % beatBase)) / beatBase);
@@ -190,10 +191,10 @@ const noteToLanes = {
 
 function drawBackground() {
     ctx1.fillStyle = lineColor;
-    ctx1.fillRect(0, 480, 1105, 40);
-    ctx1.fillRect(275, 0, 5, 650);
-    ctx1.fillRect(550, 0, 5, 650);
-    ctx1.fillRect(825, 0, 5, 650);
+    ctx1.fillRect(0, laneH, (laneW * 4) + noteOffsetX, 40);
+    for (let i = 0; i < 3; i++) {
+        ctx1.fillRect((i + 1) * laneW, 0, 5, 650);
+    }
 }
 
 function drawButtons() {
@@ -205,11 +206,11 @@ function drawButtons() {
 
 function drawButton(x, text, buttonColor, textColor) {
     ctx1.fillStyle = buttonColor;
-    ctx1.fillRect(x, 485, 270, 30);
+    ctx1.fillRect(x, buttonY, buttonW, buttonH);
 
     ctx1.font = "30px Segoe UI";
     ctx1.fillStyle = textColor;
-    ctx1.fillText(text, x + 120, 510)
+    ctx1.fillText(text, x + ((buttonW / 2) - 10), (buttonY + 25));
 }
 
 function drawNormalButton(x, text) {
@@ -222,38 +223,50 @@ function drawClickButton(x, text, resumeCB) {
 }
 
 function drawD() {
-    drawNormalButton(5, "D");
+    drawNormalButton(noteOffsetX + (laneW * 0), "D");
 }
 
 function drawF() {
-    drawNormalButton(280, "F");
+    drawNormalButton(noteOffsetX + (laneW * 1), "F");
 }
 
 function drawJ() {
-    drawNormalButton(555, "J");
+    drawNormalButton(noteOffsetX + (laneW * 2), "J");
 }
 
 function drawK() {
-    drawNormalButton(830, "K");
+    drawNormalButton(noteOffsetX + (laneW * 3), "K");
 }
 
 function drawClickD() {
-    drawClickButton(5, "D", drawD);
+    drawClickButton(noteOffsetX + (laneW * 0), "D", drawD);
 }
 
 function drawClickF() {
-    drawClickButton(280, "F", drawF);
+    drawClickButton(noteOffsetX + (laneW * 1), "F", drawF);
 }
 
 function drawClickJ() {
-    drawClickButton(555, "J", drawJ);
+    drawClickButton(noteOffsetX + (laneW * 2), "J", drawJ);
 }
 
 function drawClickK() {
-    drawClickButton(830, "K", drawK);
+    drawClickButton(noteOffsetX + (laneW * 3), "K", drawK);
+}
+
+function getMousePosOnCanvas(canvas, e) {
+    let rect = canvas.getBoundingClientRect();
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
 }
 
 function handleLaneClick (e) {
+    if (state !== 1) {
+        return;
+    }
+
     let dataSet = noteToLanes[e.code];
     let lane = dataSet[0];
     let drawClick = dataSet[1];
@@ -269,30 +282,60 @@ function handleLaneClick (e) {
 }
 
 function start () {
-    let select = document.getElementById('song-select');
-    if (select.value === "") {
-        return;
-    }
+    state = 1;
 
-    currentSong = songs[select.value];
+    currentSong = songs[$('#song-select').find(":selected").val()];
     const notesPerBeat = currentSong.notesPerBeat;
-    Tone.Transport.bpm.value = currentSong.bpm * notesPerBeat;
+    transport.bpm.value = currentSong.bpm * notesPerBeat;
 
-    var generateNotes = new Tone.Loop(generateNote, "4n").start(2);
-    var audioPlayer = new Audio(currentSong.audioFile);
+    currentSongLoop = new Tone.Loop(generateNote, "4n").start(2);
+    currentSongPlayer = new Audio(currentSong.audioFile);
+    currentSongPlayer.currentTime = 0;
 
-    Tone.Transport.schedule((time) => {
-        audioPlayer.play();
+    transport.schedule((time) => {
+        currentSongPlayer.play();
     }, currentSong.offset);
 
-    Tone.Transport.start();
+    transport.start();
+    updateButtonStates();
 }
 
 function stop() {
-    Tone.Transport.stop();
-    score = 0;
+    console.log('Stopped at this score: ', score);
+
+    state = 0;
+
     combo = 0;
+    score = 0;
+    beatIndex = 0;
+    beat = 1;
+    comboMultiplier = 1;
+    beatBase = 10;
+    notes = [];
+    currentSong = "";
+    state = 0; // 0 - stopped. 1 - playing.
+
+    transport.stop();
+    transport.cancel(); // kills scheduled events
+    currentSongPlayer.pause();
+    currentSongPlayer.currentTime = 0;
+
+    ctx2.clearRect(0, 0, canvasW, canvasH);
     updateScore();
+    updateButtonStates();
+}
+
+function updateButtonStates() {
+    $('#btnStart').prop('disabled', state === 1);
+    $('#btnStop').prop('disabled', state === 0);
+    $('#btnHelp').prop('disabled', state === 1);
+    $('#btnBack').prop('disabled', state === 1);
+    $('#song-select').prop('disabled', state === 1);
+}
+
+function handleCanvasClick(e) {
+    let pos = getMousePosOnCanvas(e.target, e);
+    console.log(pos);
 }
 
 function handleKeydown(e) {
@@ -311,13 +354,24 @@ function handleKeydown(e) {
     updateScore();
 }
 
+function bind() {
+    $(document).keydown(handleKeydown);
+    // $('#canvas-layer-2').click(handleCanvasClick);
+    $('#btnStart').click(start);
+    $('#btnStop').click(stop);
+    $('#btnHelp').click(showHelp);
+    $('#btnBack').click(hideHelp);
+}
+
 function init() {
+    bind();
     draw();
     animate();
     updateScore();
+    updateButtonStates();
 }
 
-$(document).keydown(handleKeydown);
-$('#btnStart').click(start);
-$('#btnStop').click(stop);
+const transport = Tone.getTransport();
+var currentSongLoop = null;
+var currentSongPlayer = null;
 $(document).ready(init);

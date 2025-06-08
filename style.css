@@ -98,7 +98,26 @@ body {
 button {
   width: 200px;
   height: 50px;
-  background-color:rgb(0, 255, 145);
+  background-color:rgba(0, 255, 145, 1);
+  border: 2px solid #000;
+}
+
+button:disabled {
+  background-color:rgba(175, 200, 190, 1);
+  color: #555;
+}
+
+button:not(:disabled):hover {
+  /*background-color:rgba(0, 255, 145, 0.25);*/
+  background-color:rgba(0, 0, 0, 0.25);
+  color: white;
+  cursor: pointer;
+}
+
+button:not(:disabled):active {
+  background-color:rgba(0, 0, 0, 0.5);
+  color: white;
+  cursor: pointer;
 }
 
 select {
@@ -107,5 +126,25 @@ select {
   border: 2px solid rgb(0,0,0);
   background: rgb(0, 255, 145);
   padding: 15px;
-  transition: 0.4s;
 }
+
+select:not(:disabled):hover, select:not(:disabled):active {
+  cursor: pointer;
+}
+
+select:disabled {
+  background-color:rgba(175, 200, 190, 1);
+  color: #555;
+}
+
+label {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/*select:not(:disabled):hover, select:not(:disabled):active, select:not(:disabled):hover option {*/
+/*  background-color:rgba(0, 0, 0, 0.25);*/
+/*  color: white;*/
+/*}*/
