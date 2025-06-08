@@ -72,7 +72,7 @@ function hideHelp() {
 }
 
 function playNote() {
-    var noteTap = new Audio("../assets/sound_effects/note_tap.mp3");
+    var noteTap = new Audio("assets/sound_effects/note_tap.mp3");
     noteTap.play();
 }
 
