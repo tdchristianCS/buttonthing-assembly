@@ -9,6 +9,11 @@ body {
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 
+.flexRow {
+  display: flex;
+  flex-direction: row;
+}
+
 #game {
   display: flex;
   flex-direction: column;
@@ -23,8 +28,7 @@ body {
   width: 1105px;
 }
 
-#scoreWrap, #controlsWrap {
-  padding: 40px 0;
+#scoreWrap, .controlsWrap {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -148,3 +152,38 @@ label {
 /*  background-color:rgba(0, 0, 0, 0.25);*/
 /*  color: white;*/
 /*}*/
+
+/* timer */
+.option label {
+  gap: 10px;
+  border: 2px solid #fff;
+  padding: 10px;
+}
+
+.option label:has(input:checked), .optionValidated {
+  background: #fff;
+  border-color: #000 !important;
+  color: #222;
+}
+
+.option label:has(input:not(:disabled)) {
+  cursor: pointer;
+}
+
+
+.option label:has(input:disabled) {
+  background-color:rgba(175, 175, 175, 1);
+  border-color: #777 !important;
+  color: #555;
+}
+
+#timerWrap{
+  display: flex;
+  flex-direction: column;
+  justify-content: center
+}
+
+#timer {
+  font-size: 2rem;
+  color: white;
+}

@@ -38,6 +38,8 @@ var notes = [];
 var currentSong = "";
 var state = 0; // 0 - stopped. 1 - playing.
 
+var remainingSeconds = 0;
+
 // NoteNumbers are unique IDs for each note, independent by column
 // e.g. 3 consecutive notes in column 1 will be numbered 1, 2, 3
 var laneNoteNumbers = [1, 1, 1, 1];
@@ -308,6 +310,12 @@ function start () {
     transport.start();
     updateScore();
     updateButtonStates();
+
+    if ($('#timedMode').prop('checked')) {
+        remainingSeconds = $('#timeAllowed').val();
+        $('#timer').text(remainingSeconds);
+        ticker = setInterval(tick, 1_000);
+    }
 }
 
 function stop() {
@@ -323,6 +331,25 @@ function stop() {
     ctx2.clearRect(0, 0, canvasW, canvasH);
     updateScore();
     updateButtonStates();
+
+
+    if ($('#timedMode').prop('checked')) {
+        stopTicking();
+    }
+}
+
+function stopTicking() {
+    clearInterval(ticker);
+    remainingSeconds = $('#timeAllowed').val();
+    $('#timer').text(remainingSeconds);
+}
+
+function tick() {
+    remainingSeconds -= 1;
+    if (remainingSeconds === 0) {
+        stop();
+    }
+    $('#timer').text(remainingSeconds);
 }
 
 function updateButtonStates() {
@@ -331,6 +358,8 @@ function updateButtonStates() {
     $('#btnHelp').prop('disabled', state === 1);
     $('#btnBack').prop('disabled', state === 1);
     $('#song-select').prop('disabled', state === 1);
+    $('#timedMode').prop('disabled', state === 1);
+    $('#timeAllowed').prop('disabled', state === 1);
 }
 
 function handleCanvasClick(e) {
@@ -354,6 +383,22 @@ function handleKeydown(e) {
     updateScore();
 }
 
+function handleTimedModeChange(e) {
+    let box = $(e.target);
+    if (box.prop('checked')) {
+        $('#timeAllowedLabel').addClass('optionValidated');
+        $('#timeAllowed').prop('disabled', false);
+    } else {
+        $('#timeAllowedLabel').removeClass('optionValidated');
+        $('#timeAllowed').prop('disabled', true);
+    }
+}
+
+function handleTimeAllowedChange(e) {
+    remainingSeconds = parseInt(e.target.value);
+    $('#timer').text(remainingSeconds);
+}
+
 function bind() {
     $(document).keydown(handleKeydown);
     // $('#canvas-layer-2').click(handleCanvasClick);
@@ -361,6 +406,11 @@ function bind() {
     $('#btnStop').click(stop);
     $('#btnHelp').click(showHelp);
     $('#btnBack').click(hideHelp);
+
+    $('#timedMode').change(handleTimedModeChange);
+    $('#timeAllowed').change(handleTimeAllowedChange);
+    $('#timeAllowed').keydown(handleTimeAllowedChange);
+    $('#timeAllowed').keyup(handleTimeAllowedChange);
 }
 
 function init() {
@@ -374,4 +424,5 @@ function init() {
 const transport = Tone.getTransport();
 var currentSongLoop = null;
 var currentSongPlayer = null;
+var ticker = null;
 $(document).ready(init);

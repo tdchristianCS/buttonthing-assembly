@@ -22,7 +22,8 @@
             <div id="helpWrap" class="screen hide">
                 <div id="help">
                     <h1 class="medium-text">How To Play</h1>
-                    <p class="normal-text">Press the correct keys when the notes reach the reach the rectangular area. The more
+                    <p class="normal-text">Press the correct keys when the notes reach the reach the rectangular area.
+                        The more
                         accurate you are, the more points you get.</p>
                     <h1 class="medium-text">Controls</h1>
                     <p class="normal-text">Tap notes: DFJK</p>
@@ -30,17 +31,21 @@
                     <p class="normal-text">Stop Game: ESCAPE</p>
                     <p class="normal-text">Adjust Size: Command +/- for Mac, Control +/- for Windows</p>
                     <h1 class="medium-text">Point Distribution</h1>
-                    <p class="normal-text">10 points per note. No points if note missed. Getting accurate timings increases your
-                        combo, and getting inaccurate timings will reset the combo. Combos of 10 or higher will increase score gain to 20 per
+                    <p class="normal-text">10 points per note. No points if note missed. Getting accurate timings
+                        increases your
+                        combo, and getting inaccurate timings will reset the combo. Combos of 10 or higher will increase
+                        score gain to 20 per
                         note, and combo of 50 or higher will increase point gain to 30 per note.</p>
                     <h1 class="medium-text">Note Timing</h1>
-                    <p class="normal-text">You may notice sometimes the notes don't align with the beat. This is to introduce
-                        randomness and have more to the gameplay than memorization. Yup, let's go with that. It's a feature now. Totally not a bug.</p>
+                    <p class="normal-text">You may notice sometimes the notes don't align with the beat. This is to
+                        introduce
+                        randomness and have more to the gameplay than memorization. Yup, let's go with that. It's a
+                        feature now. Totally not a bug.</p>
                 </div>
             </div>
         </div>
-        <div id="controlsWrap">
-<!--            <label for="song-select" id="label-song-select">Song</label>-->
+        <div id="controlsWrap1" class="controlsWrap">
+            <!--            <label for="song-select" id="label-song-select">Song</label>-->
             <select id="song-select">
                 <option value=fight_song>Fight Song - Eve</option>
                 <option value=bad_apple>Bad Apple - Zun (unfinished)</option>
@@ -49,6 +54,21 @@
             <button id="btnStop">Stop [Escape]</button>
             <button id="btnHelp">Help</button>
             <button id="btnBack" class="hide">Back</button>
+        </div>
+        <div id="controlsWrap2" class="controlsWrap">
+            <div class="option">
+                <label for="timedMode" id="timedModeLabel" class="flexRow"><span class="optionLabel">Timed mode</span>
+                    <input type="checkbox" checked="checked" id="timedMode">
+                </label>
+            </div>
+            <div class="option">
+                <label for="timeAllowed" id="timeAllowedLabel" class="flexRow optionValidated"><span class="optionLabel">Time</span>
+                    <input type="number" value="60" step="1" min="1" max="120" pattern="[0-9]*" id="timeAllowed">
+                </label>
+            </div>
+            <div id="timerWrap">
+                <div id="timer">60</div>
+            </div>
         </div>
     </div>
 </div>
