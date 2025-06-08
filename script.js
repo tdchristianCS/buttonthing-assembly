@@ -282,6 +282,15 @@ function handleLaneClick (e) {
 }
 
 function start () {
+    combo = 0;
+    score = 0;
+    beatIndex = 0;
+    beat = 1;
+    comboMultiplier = 1;
+    beatBase = 10;
+    notes = [];
+    currentSong = "";
+
     state = 1;
 
     currentSong = songs[$('#song-select').find(":selected").val()];
@@ -297,6 +306,7 @@ function start () {
     }, currentSong.offset);
 
     transport.start();
+    updateScore();
     updateButtonStates();
 }
 
@@ -304,16 +314,6 @@ function stop() {
     console.log('Stopped at this score: ', score);
 
     state = 0;
-
-    combo = 0;
-    score = 0;
-    beatIndex = 0;
-    beat = 1;
-    comboMultiplier = 1;
-    beatBase = 10;
-    notes = [];
-    currentSong = "";
-    state = 0; // 0 - stopped. 1 - playing.
 
     transport.stop();
     transport.cancel(); // kills scheduled events
