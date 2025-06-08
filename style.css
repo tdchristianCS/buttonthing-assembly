@@ -187,3 +187,7 @@ label {
   font-size: 2rem;
   color: white;
 }
+
+.disguise {
+  visibility: hidden;
+}

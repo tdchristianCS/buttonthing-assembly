@@ -388,9 +388,11 @@ function handleTimedModeChange(e) {
     if (box.prop('checked')) {
         $('#timeAllowedLabel').addClass('optionValidated');
         $('#timeAllowed').prop('disabled', false);
+        $('#timer').removeClass('disguise');
     } else {
         $('#timeAllowedLabel').removeClass('optionValidated');
         $('#timeAllowed').prop('disabled', true);
+        $('#timer').addClass('disguise');
     }
 }
 
