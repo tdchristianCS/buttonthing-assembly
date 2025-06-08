@@ -256,14 +256,6 @@ function drawClickK() {
     drawClickButton(noteOffsetX + (laneW * 3), "K", drawK);
 }
 
-function getMousePosOnCanvas(canvas, e) {
-    let rect = canvas.getBoundingClientRect();
-    return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-    };
-}
-
 function handleLaneClick (e) {
     if (state !== 1) {
         return;
@@ -362,11 +354,6 @@ function updateButtonStates() {
     $('#timeAllowed').prop('disabled', state === 1);
 }
 
-function handleCanvasClick(e) {
-    let pos = getMousePosOnCanvas(e.target, e);
-    console.log(pos);
-}
-
 function handleKeydown(e) {
     if (Object.keys(noteToLanes).includes(e.code)) {
         handleLaneClick(e);
@@ -403,7 +390,6 @@ function handleTimeAllowedChange(e) {
 
 function bind() {
     $(document).keydown(handleKeydown);
-    // $('#canvas-layer-2').click(handleCanvasClick);
     $('#btnStart').click(start);
     $('#btnStop').click(stop);
     $('#btnHelp').click(showHelp);
